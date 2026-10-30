@@ -110,6 +110,7 @@ async function openTarget(raw) {
   await connection.setTransport("/libcurl/index.mjs", [{ wisp: wispUrl }]);
   status.textContent = "Building browser tab…";
   frameHost.replaceChildren();
+  document.getElementById("start-page")?.classList.add("hidden");
   const frame = scramjet.createFrame();
   frame.frame.id = "proxy-frame";
   frame.frame.title = "Scramjet website view";
