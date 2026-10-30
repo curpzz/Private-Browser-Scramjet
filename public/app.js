@@ -166,27 +166,21 @@ if (embedded) {
   });
 }
 
-loginForm.addEventListener("submit", async (event) => {
-  event.preventDefault();
-  loginError.textContent = "";
-  const button = loginForm.querySelector("button");
-  button.disabled = true;
-  try {
-    await unlock(pinInput.value);
-    pinInput.value = "";
-    await initializeScramjet();
-    login.classList.add("hidden");
-    browser.classList.remove("hidden");
-    status.textContent = "Session ready. Enter a website above.";
-  } catch (error) {
-    const recovered = await handleStorageFailure(error).catch(() => false);
-    if (!recovered) {
-      loginError.textContent = error?.message || "Could not unlock browser.";
+if (!embedded) {
+  (async () => {
+    status.textContent = "Starting ZUX OS…";
+    try {
+      await unlock("");
+      await initializeScramjet();
+      login.classList.add("hidden");
+      browser.classList.remove("hidden");
+      status.textContent = "Ready. Enter a website above.";
+    } catch (error) {
+      const recovered = await handleStorageFailure(error).catch(() => false);
+      if (!recovered) loginError.textContent = error?.message || "Could not start the browser.";
     }
-  } finally {
-    button.disabled = false;
-  }
-});
+  })();
+}
 
 browseForm.addEventListener("submit", async (event) => {
   event.preventDefault();
@@ -199,10 +193,3 @@ browseForm.addEventListener("submit", async (event) => {
   }
 });
 
-document.getElementById("lock").addEventListener("click", () => {
-  sessionToken = null;
-  frameHost.replaceChildren();
-  browser.classList.add("hidden");
-  login.classList.remove("hidden");
-  notifyParent("private-browser:locked");
-});
