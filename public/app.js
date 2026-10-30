@@ -83,6 +83,16 @@ async function handleStorageFailure(error) {
 
 async function initializeScramjet() {
   if (scramjet) return;
+  if (!sessionToken || !validSessionLocally(sessionToken)) {
+    throw new Error("The proxy session is not ready. Reload and try again.");
+  }
+
+  // Configure BareMux before registering/activating the service worker.
+  // Otherwise the first intercepted request can race ahead without a transport.
+  connection = new BareMux.BareMuxConnection("/baremux/worker.js");
+  const wispUrl = "wss://" + location.host + "/wisp/?token=" + encodeURIComponent(sessionToken);
+  await connection.setTransport("/libcurl/index.mjs", [{ wisp: wispUrl }]);
+
   await registerSW();
   const { ScramjetController } = $scramjetLoadController();
   scramjet = new ScramjetController({
@@ -93,21 +103,16 @@ async function initializeScramjet() {
     }
   });
   await scramjet.init();
-  connection = new BareMux.BareMuxConnection("/baremux/worker.js");
 }
 
 async function openTarget(raw) {
   if (!sessionToken || !validSessionLocally(sessionToken)) {
     sessionToken = null;
-    throw new Error("Your proxy session expired. Enter the access code again.");
+    throw new Error("Your proxy session expired. Reload the browser to reconnect.");
   }
   const target = normalizeTarget(raw);
-  status.textContent = "Starting Scramjet…";
+  status.textContent = "Starting secure proxy…";
   await initializeScramjet();
-  status.textContent = "Connecting to proxy relay…";
-  const wispUrl = "wss://" + location.host + "/wisp/?token=" + encodeURIComponent(sessionToken);
-  // libcurl-transport 1.x with BareMux expects the Wisp endpoint under "wisp".
-  await connection.setTransport("/libcurl/index.mjs", [{ wisp: wispUrl }]);
   status.textContent = "Building browser tab…";
   frameHost.replaceChildren();
   document.getElementById("start-page")?.classList.add("hidden");
