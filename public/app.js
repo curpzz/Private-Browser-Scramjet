@@ -96,7 +96,6 @@ async function initializeScramjet() {
   const wispUrl = (location.protocol === "https:" ? "wss://" : "ws://") + location.host + "/wisp/";
   await connection.setTransport("/libcurl/index.mjs", [{ wisp: wispUrl }]);
 
-  await registerSW();
   const { ScramjetController } = $scramjetLoadController();
   scramjet = new ScramjetController({
     files: {
@@ -106,6 +105,8 @@ async function initializeScramjet() {
     }
   });
   await scramjet.init();
+  // Initialize Scramjet's IndexedDB schema before the worker can intercept requests.
+  await registerSW();
 }
 
 async function openTarget(raw) {
