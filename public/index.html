@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Private Browser — Scramjet</title>
+  <link rel="stylesheet" href="/styles.css">
+  <script src="/scram/scramjet.all.js"></script>
+  <script src="/baremux/index.js"></script>
+  <script src="/register-sw.js" defer></script>
+  <script src="/app.js" defer></script>
+</head>
+<body>
+  <main class="shell">
+    <section id="login" class="panel">
+      <div class="mark">PB</div>
+      <p class="eyebrow">PRIVATE BROWSER</p>
+      <h1>Welcome back.</h1>
+      <p class="muted">Enter your family access code to start a private browsing session.</p>
+      <form id="login-form">
+        <label for="pin">Access code</label>
+        <input id="pin" type="password" inputmode="numeric" autocomplete="current-password" maxlength="128" required>
+        <button type="submit">Unlock browser</button>
+      </form>
+      <p id="login-error" class="error" role="alert"></p>
+    </section>
+    <section id="browser" class="browser hidden">
+      <header><div><p class="eyebrow">PRIVATE BROWSER</p><h1>Browse the web.</h1></div><button id="lock" class="secondary" type="button">Lock</button></header>
+      <form id="browse-form" class="address-row">
+        <input id="address" type="text" placeholder="Enter a website or search the web" autocomplete="url" required>
+        <button type="submit">Go</button>
+      </form>
+      <p id="status" class="muted" aria-live="polite">Your session is ready.</p>
+      <div id="frame-host"></div>
+    </section>
+  </main>
+</body>
+</html>
