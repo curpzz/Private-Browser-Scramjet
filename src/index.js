@@ -10,10 +10,9 @@ import { baremuxPath } from "@mercuryworkshop/bare-mux/node";
 
 const publicPath = fileURLToPath(new URL("../public/", import.meta.url));
 const port = Number.parseInt(process.env.PORT || "10000", 10);
-const accessPin = process.env.ACCESS_PIN;
 const sessionSecret = process.env.SESSION_SECRET;
-if (!accessPin || !sessionSecret || sessionSecret.length < 32) {
-  throw new Error("ACCESS_PIN and a 32+ character SESSION_SECRET must be configured.");
+if (!sessionSecret || sessionSecret.length < 32) {
+  throw new Error("A 32+ character SESSION_SECRET must be configured.");
 }
 if (!Number.isInteger(port) || port < 1 || port > 65535) throw new Error("Invalid PORT.");
 
@@ -46,13 +45,6 @@ function validSession(token) {
     return Number.isFinite(decoded.exp) && decoded.exp > Date.now();
   } catch { return false; }
 }
-function checkPin(value) {
-  if (typeof value !== "string" || value.length > 128) return false;
-  const a = Buffer.from(value);
-  const b = Buffer.from(accessPin);
-  return a.length === b.length && timingSafeEqual(a, b);
-}
-
 const failedLogins = new Map();
 const fastify = Fastify({
   logger: { level: "warn" },
@@ -84,24 +76,8 @@ const fastify = Fastify({
     })
 });
 fastify.get("/api/health", async () => ({ ok: true, service: "private-browser-scramjet" }));
-fastify.post("/api/session", async (request, reply) => {
-  const ip = String(request.ip || request.socket.remoteAddress || "unknown");
-  const now = Date.now();
-  const record = failedLogins.get(ip);
-  if (record?.blockedUntil > now) {
-    return reply.code(429).send({ error: "Too many attempts. Try again in 15 minutes." });
-  }
-  if (!checkPin(request.body?.pin)) {
-    const current = record && record.windowStart > now - 15 * 60 * 1000
-      ? record : { count: 0, windowStart: now, blockedUntil: 0 };
-    current.count += 1;
-    if (current.count >= 5) current.blockedUntil = now + 15 * 60 * 1000;
-    failedLogins.set(ip, current);
-    return reply.code(current.blockedUntil ? 429 : 401).send({
-      error: current.blockedUntil ? "Too many attempts. Try again in 15 minutes." : "Access code did not match."
-    });
-  }
-  failedLogins.delete(ip);
+fastify.post("/api/session", async (_request, reply) => {
+  // Password-free mode: anyone who can reach this public URL can create a short-lived session.
   return reply.send({ token: issueSession(), expiresIn: 4 * 60 * 60 });
 });
 
