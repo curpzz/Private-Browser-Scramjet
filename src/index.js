@@ -65,7 +65,7 @@ const fastify = Fastify({
         const parsed = new URL(req.url || "/", "http://localhost");
         pathname = parsed.pathname;
         const cookieHeader = req.headers.cookie || "";
-        const sessionCookie = cookieHeader.match(/(?:^|;\\s*)zux_proxy_session=([^;]+)/);
+        const sessionCookie = cookieHeader.match(/(?:^|;\s*)zux_proxy_session=([^;]+)/);
         token = sessionCookie ? decodeURIComponent(sessionCookie[1]) : "";
       } catch { socket.destroy(); return; }
       if (pathname !== "/wisp/" || !validSession(token)) {
