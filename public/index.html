@@ -9,12 +9,12 @@
   <link rel="stylesheet" href="/styles.css">
   <script src="/scram/scramjet.all.js"></script>
   <script src="/baremux/index.js"></script>
-  <script src="/register-sw.js?v=20261030-4" defer></script>
-  <script src="/app.js?v=20261030-4" defer></script>
+  <script src="/register-sw.js?v=20261030-5" defer></script>
+  <script src="/app.js?v=20261030-5" defer></script>
 </head>
 <body>
   <main class="shell">
-    <section id="login" class="panel">
+    <section id="login" class="panel hidden">
       <div class="brand-row">
         <div class="mark">Z</div>
         <div><p class="brand-name">ZUX OS</p><p class="brand-subtitle">PRIVATE BROWSER</p></div>
@@ -32,13 +32,12 @@
       <p id="login-error" class="error" role="alert"></p>
       <p class="footnote">Private session · Access protected</p>
     </section>
-    <section id="browser" class="browser hidden">
+    <section id="browser" class="browser">
       <header>
         <div class="brand-row compact">
           <div class="mark">Z</div>
           <div><p class="brand-name">ZUX OS</p><p class="brand-subtitle">BROWSER</p></div>
         </div>
-        <button id="lock" class="secondary" type="button">Lock session</button>
       </header>
       <form id="browse-form" class="address-row">
         <span class="address-icon" aria-hidden="true">⌕</span>
