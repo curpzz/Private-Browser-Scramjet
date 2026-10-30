@@ -3,7 +3,9 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Private Browser — Scramjet</title>
+  <meta name="theme-color" content="#090b14">
+  <meta name="description" content="ZUX OS — private family browser">
+  <title>ZUX OS — Browser</title>
   <link rel="stylesheet" href="/styles.css">
   <script src="/scram/scramjet.all.js"></script>
   <script src="/baremux/index.js"></script>
@@ -13,24 +15,37 @@
 <body>
   <main class="shell">
     <section id="login" class="panel">
-      <div class="mark">PB</div>
-      <p class="eyebrow">PRIVATE BROWSER</p>
-      <h1>Welcome back.</h1>
-      <p class="muted">Enter your family access code to start a private browsing session.</p>
+      <div class="brand-row">
+        <div class="mark">Z</div>
+        <div><p class="brand-name">ZUX OS</p><p class="brand-subtitle">PRIVATE BROWSER</p></div>
+      </div>
+      <div class="login-copy">
+        <p class="eyebrow">FAMILY ACCESS</p>
+        <h1>Welcome back.</h1>
+        <p class="muted">Enter your access code to open your private browsing session.</p>
+      </div>
       <form id="login-form">
-        <label for="pin">Access code</label>
-        <input id="pin" type="password" inputmode="numeric" autocomplete="current-password" maxlength="128" required>
-        <button type="submit">Unlock browser</button>
+        <label for="pin">VERIFICATION</label>
+        <input id="pin" type="password" inputmode="numeric" autocomplete="current-password" maxlength="128" placeholder="Enter access code" required>
+        <button type="submit">Continue <span aria-hidden="true">→</span></button>
       </form>
       <p id="login-error" class="error" role="alert"></p>
+      <p class="footnote">Private session · Access protected</p>
     </section>
     <section id="browser" class="browser hidden">
-      <header><div><p class="eyebrow">PRIVATE BROWSER</p><h1>Browse the web.</h1></div><button id="lock" class="secondary" type="button">Lock</button></header>
+      <header>
+        <div class="brand-row compact">
+          <div class="mark">Z</div>
+          <div><p class="brand-name">ZUX OS</p><p class="brand-subtitle">BROWSER</p></div>
+        </div>
+        <button id="lock" class="secondary" type="button">Lock session</button>
+      </header>
       <form id="browse-form" class="address-row">
-        <input id="address" type="text" placeholder="Enter a website or search the web" autocomplete="url" required>
-        <button type="submit">Go</button>
+        <span class="address-icon" aria-hidden="true">⌕</span>
+        <input id="address" type="text" placeholder="Search or enter a website address" autocomplete="url" required>
+        <button type="submit">Go <span aria-hidden="true">→</span></button>
       </form>
-      <p id="status" class="muted" aria-live="polite">Your session is ready.</p>
+      <p id="status" class="muted" aria-live="polite">Your secure session is ready.</p>
       <div id="frame-host"></div>
     </section>
   </main>
