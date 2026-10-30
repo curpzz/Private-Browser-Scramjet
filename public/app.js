@@ -132,7 +132,7 @@ function validSessionLocally(token) {
   try {
     const payload = token.split(".")[0];
     const decoded = JSON.parse(atob(payload.replace(/-/g, "+").replace(/_/g, "/")));
-    return Number.isFinite(decoded.exp) && decoded.exp > Date.now();
+    return Number.isFinite(decoded.exp) && decoded.exp * 1000 > Date.now();
   } catch {
     return false;
   }
