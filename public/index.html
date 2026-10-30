@@ -3,50 +3,71 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#090b14">
-  <meta name="description" content="ZUX OS — private family browser">
-  <title>ZUX OS — Browser</title>
-  <link rel="stylesheet" href="/styles.css">
+  <meta name="theme-color" content="#101827">
+  <meta name="description" content="Unblocked Browser">
+  <title>Unblocked Browser</title>
+  <link rel="stylesheet" href="/styles.css?v=ub-1">
   <script src="/scram/scramjet.all.js"></script>
   <script src="/baremux/index.js"></script>
-  <script src="/register-sw.js?v=20261030-5" defer></script>
-  <script src="/app.js?v=20261030-5" defer></script>
+  <script src="/register-sw.js?v=ub-1" defer></script>
+  <script src="/app.js?v=ub-1" defer></script>
 </head>
 <body>
-  <main class="shell">
-    <section id="login" class="panel hidden">
-      <div class="brand-row">
-        <div class="mark">Z</div>
-        <div><p class="brand-name">ZUX OS</p><p class="brand-subtitle">PRIVATE BROWSER</p></div>
+  <div class="app-shell">
+    <aside class="workspace">
+      <div class="brand"><div class="brand-mark">UB</div><div><strong>UNBLOCKED</strong><span>BROWSER</span></div></div>
+      <div class="workspace-label">WORKSPACE</div>
+      <button class="workspace-setting" type="button">⚙ <span>Local workspace settings</span></button>
+      <div class="workspace-note">Your browser workspace</div>
+      <div class="sidebar-bottom"><span class="online-dot"></span> Local session</div>
+    </aside>
+    <main class="browser-area">
+      <div class="tab-strip">
+        <div class="tab active"><span class="tab-favicon">◎</span> UB New Tab <span class="tab-close">×</span></div>
+        <button class="new-tab" type="button" aria-label="New tab">+</button>
       </div>
-      <div class="login-copy">
-        <p class="eyebrow">FAMILY ACCESS</p>
-        <h1>Welcome back.</h1>
-        <p class="muted">Enter your access code to open your private browsing session.</p>
-      </div>
-      <form id="login-form">
-        <label for="pin">VERIFICATION</label>
-        <input id="pin" type="password" inputmode="numeric" autocomplete="current-password" maxlength="128" placeholder="Enter access code" required>
-        <button type="submit">Continue <span aria-hidden="true">→</span></button>
-      </form>
-      <p id="login-error" class="error" role="alert"></p>
-      <p class="footnote">Private session · Access protected</p>
-    </section>
-    <section id="browser" class="browser">
-      <header>
-        <div class="brand-row compact">
-          <div class="mark">Z</div>
-          <div><p class="brand-name">ZUX OS</p><p class="brand-subtitle">BROWSER</p></div>
+      <section id="login" class="hidden">
+        <form id="login-form"><input id="pin" type="password" autocomplete="off"><button type="submit">Continue</button></form>
+        <p id="login-error"></p>
+      </section>
+      <section id="browser" class="browser">
+        <div class="nav-toolbar">
+          <button class="nav-button" type="button" aria-label="Home">⌂</button>
+          <button class="nav-button" type="button" aria-label="Refresh" onclick="location.reload()">↻</button>
+          <form id="browse-form" class="address-row">
+            <span class="address-icon">⌕</span>
+            <input id="address" type="text" placeholder="Search or enter a website address…" autocomplete="url" required>
+            <button class="go-button" type="submit">Go</button>
+          </form>
+          <button class="nav-button" type="button" aria-label="More">···</button>
         </div>
-      </header>
-      <form id="browse-form" class="address-row">
-        <span class="address-icon" aria-hidden="true">⌕</span>
-        <input id="address" type="text" placeholder="Search or enter a website address" autocomplete="url" required>
-        <button type="submit">Go <span aria-hidden="true">→</span></button>
-      </form>
-      <p id="status" class="muted" aria-live="polite">Your secure session is ready.</p>
-      <div id="frame-host"></div>
-    </section>
-  </main>
+        <div id="start-page" class="start-page">
+          <div class="welcome-icon">UB</div>
+          <h1>Unblocked Browser</h1>
+          <p class="welcome-copy">Enter a website address to load it here, or search Wikipedia for a topic</p>
+          <form id="start-search" class="start-search">
+            <span>⌕</span><input id="start-address" type="text" placeholder="Search the web or enter an address…"><button type="submit">Search</button>
+          </form>
+          <div class="saved-heading"><span>YOUR SAVED SITES</span><button type="button" class="quick-links">Quick Links <span>⌄</span></button></div>
+          <div class="saved-empty"><div class="star">☆</div><strong>No saved websites yet</strong><span>Open a website and press ☆ in the address bar to save it</span></div>
+        </div>
+        <p id="status" class="status" aria-live="polite">Starting browser…</p>
+        <div id="frame-host"></div>
+        <footer class="browser-footer"><span>UNBLOCKED BROWSER</span><span>Tabs stay here · Settings save locally</span><span>1 tab</span></footer>
+      </section>
+    </main>
+  </div>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const startForm = document.getElementById("start-search");
+      const address = document.getElementById("address");
+      const startAddress = document.getElementById("start-address");
+      startForm?.addEventListener("submit", event => {
+        event.preventDefault(); address.value = startAddress.value;
+        document.getElementById("browse-form").requestSubmit();
+      });
+      document.querySelector(".nav-button[aria-label='Home']")?.addEventListener("click", () => location.reload());
+    });
+  </script>
 </body>
 </html>
