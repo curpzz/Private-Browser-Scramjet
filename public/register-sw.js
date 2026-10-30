@@ -5,7 +5,7 @@ async function registerSW() {
     throw new Error("Secure HTTPS is required for the proxy service worker.");
   }
 
-  const registration = await navigator.serviceWorker.register("/sw.js?v=20261030-7", {
+  const registration = await navigator.serviceWorker.register("/sw.js?v=20261030-8", {
     scope: "/",
     updateViaCache: "none"
   });
