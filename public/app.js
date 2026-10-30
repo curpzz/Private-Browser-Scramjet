@@ -102,9 +102,13 @@ async function openTarget(raw) {
     throw new Error("Your proxy session expired. Enter the access code again.");
   }
   const target = normalizeTarget(raw);
+  status.textContent = "Starting Scramjet…";
   await initializeScramjet();
+  status.textContent = "Connecting to proxy relay…";
   const wispUrl = "wss://" + location.host + "/wisp/?token=" + encodeURIComponent(sessionToken);
-  await connection.setTransport("/libcurl/index.mjs", [{ websocket: wispUrl }]);
+  // libcurl-transport 1.x with BareMux expects the Wisp endpoint under "wisp".
+  await connection.setTransport("/libcurl/index.mjs", [{ wisp: wispUrl }]);
+  status.textContent = "Building browser tab…";
   frameHost.replaceChildren();
   const frame = scramjet.createFrame();
   frame.frame.id = "proxy-frame";
