@@ -16,7 +16,7 @@ if (!sessionSecret || sessionSecret.length < 32) {
 }
 if (!Number.isInteger(port) || port < 1 || port > 65535) throw new Error("Invalid PORT.");
 
-logging.set_level(logging.WARN);
+logging.set_level(logging.DEBUG);
 Object.assign(wisp.options, {
   allow_tcp_streams: true,
   allow_udp_streams: true,
@@ -72,13 +72,28 @@ const fastify = Fastify({
         const sessionCookie = cookieHeader.match(/(?:^|;\s*)zux_proxy_session=([^;]+)/);
         token = sessionCookie ? decodeURIComponent(sessionCookie[1]) : "";
       } catch { socket.destroy(); return; }
-      if (pathname !== "/wisp/" || !validSession(token)) {
+      const authenticated = validSession(token);
+      console.log("[wisp] upgrade", JSON.stringify({
+        pathname,
+        authenticated,
+        cookiePresent: Boolean(token),
+        websocketProtocol: req.headers["sec-websocket-protocol"] || null
+      }));
+      if (pathname !== "/wisp/" || !authenticated) {
+        console.warn("[wisp] rejected upgrade", pathname, authenticated ? "authenticated" : "missing-or-invalid-session");
         socket.write("HTTP/1.1 401 Unauthorized\r\nConnection: close\r\n\r\n");
         socket.destroy();
         return;
       }
       req.url = pathname;
-      wisp.routeRequest(req, socket, head);
+      socket.on("error", (error) => console.error("[wisp] socket error", error.message));
+      socket.on("close", () => console.log("[wisp] websocket socket closed"));
+      try {
+        wisp.routeRequest(req, socket, head);
+      } catch (error) {
+        console.error("[wisp] routeRequest failed", error);
+        socket.destroy();
+      }
     })
 });
 fastify.get("/api/health", async () => ({ ok: true, service: "private-browser-scramjet" }));
