@@ -182,7 +182,8 @@ if (!embedded) {
       status.textContent = "Ready. Enter a website above.";
     } catch (error) {
       const recovered = await handleStorageFailure(error).catch(() => false);
-      if (!recovered) {\n        loginError.textContent = error?.message || "Could not start the browser.";\n        status.textContent = error?.message || "Could not start the browser.";\n      }
+      if (!recovered) {
+        loginError.textContent = error?.message || "Could not start the browser.";\n        status.textContent = error?.message || "Could not start the browser.";\n      }
     }
   })();
 }
