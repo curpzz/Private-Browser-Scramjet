@@ -183,7 +183,9 @@ if (!embedded) {
     } catch (error) {
       const recovered = await handleStorageFailure(error).catch(() => false);
       if (!recovered) {
-        loginError.textContent = error?.message || "Could not start the browser.";\n        status.textContent = error?.message || "Could not start the browser.";\n      }
+        loginError.textContent = error?.message || "Could not start the browser.";
+        status.textContent = error?.message || "Could not start the browser.";
+      }
     }
   })();
 }
