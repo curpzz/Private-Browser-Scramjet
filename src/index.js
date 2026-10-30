@@ -64,7 +64,9 @@ const fastify = Fastify({
       try {
         const parsed = new URL(req.url || "/", "http://localhost");
         pathname = parsed.pathname;
-        token = parsed.searchParams.get("token") || "";
+        const cookieHeader = req.headers.cookie || "";
+        const sessionCookie = cookieHeader.match(/(?:^|;\\s*)zux_proxy_session=([^;]+)/);
+        token = sessionCookie ? decodeURIComponent(sessionCookie[1]) : "";
       } catch { socket.destroy(); return; }
       if (pathname !== "/wisp/" || !validSession(token)) {
         socket.write("HTTP/1.1 401 Unauthorized\r\nConnection: close\r\n\r\n");
@@ -76,9 +78,20 @@ const fastify = Fastify({
     })
 });
 fastify.get("/api/health", async () => ({ ok: true, service: "private-browser-scramjet" }));
-fastify.post("/api/session", async (_request, reply) => {
-  // Password-free mode: anyone who can reach this public URL can create a short-lived session.
-  return reply.send({ token: issueSession(), expiresIn: 4 * 60 * 60 });
+fastify.post("/api/session", async (request, reply) => {
+  // The browser sends this HttpOnly cookie only to /wisp/. Keeping credentials
+  // out of the WebSocket URL also preserves the trailing slash required by Wisp.
+  const token = issueSession();
+  const secure = request.headers["x-forwarded-proto"] === "https" || request.protocol === "https";
+  const cookie = [
+    "zux_proxy_session=" + encodeURIComponent(token),
+    "Path=/wisp/",
+    "HttpOnly",
+    "SameSite=Strict",
+    "Max-Age=14400",
+    ...(secure ? ["Secure"] : [])
+  ].join("; ");
+  return reply.header("Set-Cookie", cookie).send({ token, expiresIn: 4 * 60 * 60 });
 });
 
 await fastify.register(fastifyStatic, { root: publicPath, decorateReply: true, index: ["index.html"] });
