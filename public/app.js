@@ -209,3 +209,21 @@ browseForm.addEventListener("submit", async (event) => {
   }
 });
 
+
+/* Intro shortcut and always-proxied workspace navigation */
+(() => {
+ const intro=document.getElementById("intro");let count=0,timer;
+ const dismiss=()=>{intro?.classList.add("dismissed");sessionStorage.setItem("zux-intro-seen","1")};
+ if(sessionStorage.getItem("zux-intro-seen")==="1")dismiss();
+ document.getElementById("intro-continue")?.addEventListener("click",dismiss);
+ document.addEventListener("keydown",e=>{if(e.key!=="Enter"||!intro||intro.classList.contains("dismissed"))return;e.preventDefault();count++;clearTimeout(timer);if(count>=2)dismiss();else timer=setTimeout(()=>count=0,1800)});
+ const pages=["home","history","games","apps","settings"];
+ const show=name=>{pages.forEach(p=>document.getElementById(p==="home"?"start-page":p+"-page")?.classList.toggle("hidden",p!==name));document.querySelectorAll(".side-link").forEach(b=>b.classList.toggle("active",b.dataset.page===name))};
+ document.querySelectorAll(".side-link[data-page]").forEach(b=>b.addEventListener("click",()=>show(b.dataset.page)));
+ document.querySelectorAll("[data-target]").forEach(b=>b.addEventListener("click",()=>{addressInput.value=b.dataset.target;show("home");browseForm.requestSubmit()}));
+ const key="zux-history",read=()=>{try{return JSON.parse(localStorage.getItem(key)||"[]")}catch{return[]}};
+ const render=()=>{const el=document.getElementById("history-list");if(!el)return;el.replaceChildren();const a=read();if(!a.length){el.textContent="Your history is empty";return}a.forEach(url=>{const b=document.createElement("button");b.className="history-entry";b.textContent=url;b.onclick=()=>{addressInput.value=url;show("home");browseForm.requestSubmit()};el.appendChild(b)})};
+ document.querySelector('[data-page="history"]')?.addEventListener("click",render);
+ document.getElementById("clear-history")?.addEventListener("click",()=>{localStorage.removeItem(key);render()});
+ const original=openTarget;openTarget=async raw=>{const target=await original(raw);localStorage.setItem(key,JSON.stringify([target,...read().filter(x=>x!==target)].slice(0,50)));render();return target};
+})();
