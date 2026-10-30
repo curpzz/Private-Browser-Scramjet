@@ -23,8 +23,12 @@ Object.assign(wisp.options, {
   allow_private_ips: false,
   allow_loopback_ips: false,
   allow_direct_ip: false,
-  stream_limit_total: 256,
-  stream_limit_per_host: 64
+  stream_limit_total: 128,
+  stream_limit_per_host: 32,
+  dns_method: "resolve",
+  dns_servers: ["1.1.1.1", "1.0.0.1"],
+  dns_result_order: "ipv4first",
+  dns_ttl: 300
 });
 
 const sign = (payload) => createHmac("sha256", sessionSecret).update(payload).digest();
