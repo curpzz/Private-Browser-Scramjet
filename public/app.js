@@ -40,6 +40,47 @@ async function unlock(pin) {
   sessionToken = data.token;
 }
 
+async function recoverIndexedDBState() {
+  // Clear only this site's local proxy databases and worker caches.
+  try {
+    if (indexedDB.databases) {
+      const databases = await indexedDB.databases();
+      await Promise.all(databases.filter((db) => db.name).map((db) =>
+        new Promise((resolve) => {
+          const request = indexedDB.deleteDatabase(db.name);
+          request.onsuccess = request.onerror = request.onblocked = () => resolve();
+        })
+      ));
+    }
+  } catch (error) {
+    console.warn("Could not enumerate local databases:", error);
+  }
+  try {
+    const registrations = await navigator.serviceWorker.getRegistrations();
+    await Promise.all(registrations.map((registration) => registration.unregister()));
+  } catch (error) {
+    console.warn("Could not reset service workers:", error);
+  }
+  try {
+    const names = await caches.keys();
+    await Promise.all(names.map((name) => caches.delete(name)));
+  } catch (error) {
+    console.warn("Could not clear local worker caches:", error);
+  }
+}
+
+async function handleStorageFailure(error) {
+  const message = String(error?.message || error || "");
+  if (!/object store|IDBDatabase|IndexedDB/i.test(message)) return false;
+  const key = "zux-idb-recovery-attempted";
+  if (sessionStorage.getItem(key) === "1") return false;
+  sessionStorage.setItem(key, "1");
+  loginError.textContent = "Repairing browser storage… this page will reload.";
+  await recoverIndexedDBState();
+  location.reload();
+  return true;
+}
+
 async function initializeScramjet() {
   if (scramjet) return;
   await registerSW();
