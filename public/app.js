@@ -82,6 +82,23 @@ async function handleStorageFailure(error) {
   return true;
 }
 
+async function prepareScramjetDatabase() {
+  // Scramjet v1's worker opens "$scramjet" without an upgrade handler.
+  // Create every required object store on the page before the worker starts.
+  await new Promise((resolve, reject) => {
+    const request = indexedDB.open("$scramjet", 1);
+    request.onupgradeneeded = () => {
+      const db = request.result;
+      for (const store of ["config", "cookies", "redirectTrackers", "referrerPolicies", "publicSuffixList"]) {
+        if (!db.objectStoreNames.contains(store)) db.createObjectStore(store);
+      }
+    };
+    request.onsuccess = () => { request.result.close(); resolve(); };
+    request.onerror = () => reject(request.error || new Error("Could not initialize Scramjet storage."));
+    request.onblocked = () => reject(new Error("Scramjet storage is busy. Close other ZUX OS tabs and reload."));
+  });
+}
+
 async function initializeScramjet() {
   if (scramjet) return;
   if (!sessionToken || !validSessionLocally(sessionToken)) {
@@ -96,6 +113,8 @@ async function initializeScramjet() {
   const wispUrl = (location.protocol === "https:" ? "wss://" : "ws://") + location.host + "/wisp/";
   await connection.setTransport("/libcurl/index.mjs", [{ wisp: wispUrl }]);
 
+  await prepareScramjetDatabase();
+  await registerSW();
   const { ScramjetController } = $scramjetLoadController();
   scramjet = new ScramjetController({
     files: {
@@ -105,8 +124,6 @@ async function initializeScramjet() {
     }
   });
   await scramjet.init();
-  // Initialize Scramjet's IndexedDB schema before the worker can intercept requests.
-  await registerSW();
 }
 
 async function openTarget(raw) {
