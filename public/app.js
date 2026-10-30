@@ -32,6 +32,7 @@ function normalizeTarget(value) {
 async function unlock(pin) {
   const response = await fetch("/api/session", {
     method: "POST",
+    credentials: "same-origin",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ pin })
   });
@@ -90,7 +91,9 @@ async function initializeScramjet() {
   // Configure BareMux before registering/activating the service worker.
   // Otherwise the first intercepted request can race ahead without a transport.
   connection = new BareMux.BareMuxConnection("/baremux/worker.js");
-  const wispUrl = "wss://" + location.host + "/wisp/?token=" + encodeURIComponent(sessionToken);
+  // Keep the Wisp endpoint canonical: libcurl requires the URL to end in "/".
+  // The short-lived session is sent separately as a scoped HttpOnly cookie.
+  const wispUrl = (location.protocol === "https:" ? "wss://" : "ws://") + location.host + "/wisp/";
   await connection.setTransport("/libcurl/index.mjs", [{ wisp: wispUrl }]);
 
   await registerSW();
