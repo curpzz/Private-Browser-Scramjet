@@ -179,7 +179,10 @@ loginForm.addEventListener("submit", async (event) => {
     browser.classList.remove("hidden");
     status.textContent = "Session ready. Enter a website above.";
   } catch (error) {
-    loginError.textContent = error?.message || "Could not unlock browser.";
+    const recovered = await handleStorageFailure(error).catch(() => false);
+    if (!recovered) {
+      loginError.textContent = error?.message || "Could not unlock browser.";
+    }
   } finally {
     button.disabled = false;
   }
