@@ -111,7 +111,7 @@ async function initializeScramjet() {
   // Keep the Wisp endpoint canonical: libcurl requires the URL to end in "/".
   // The short-lived session is sent separately as a scoped HttpOnly cookie.
   const wispUrl = (location.protocol === "https:" ? "wss://" : "ws://") + location.host + "/wisp/";
-  await connection.setTransport("/libcurl/index.mjs", [{ wisp: wispUrl }]);
+  await connection.setTransport("/libcurl/index.mjs", [{ websocket: wispUrl }]);
 
   await prepareScramjetDatabase();
   await registerSW();
