@@ -14,6 +14,27 @@ let sessionToken = null;
 let scramjet = null;
 let connection = null;
 
+const RESET_VERSION = "zux-clean-reset-20261031";
+async function cleanResetOnce() {
+  if (sessionStorage.getItem(RESET_VERSION) === "done") return;
+  sessionStorage.setItem(RESET_VERSION, "done");
+  try {
+    const registrations = await navigator.serviceWorker.getRegistrations();
+    await Promise.all(registrations.map((registration) => registration.unregister()));
+  } catch (error) { console.warn("Service worker reset:", error); }
+  try {
+    await new Promise((resolve) => {
+      const request = indexedDB.deleteDatabase("$scramjet");
+      request.onsuccess = request.onerror = request.onblocked = () => resolve();
+    });
+  } catch (error) { console.warn("Scramjet database reset:", error); }
+  try {
+    await Promise.all((await caches.keys()).map((name) => caches.delete(name)));
+  } catch (error) { console.warn("Cache reset:", error); }
+  location.reload();
+  await new Promise(() => {});
+}
+
 function notifyParent(type, extra = {}) {
   if (embedded && window.parent !== window) {
     window.parent.postMessage({ type, ...extra }, parentOrigin);
