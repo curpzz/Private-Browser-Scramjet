@@ -244,7 +244,12 @@ browseForm.addEventListener("submit", async (event) => {
   event.preventDefault();
   status.textContent = "Preparing connection…";
   try {
-    if (!sessionToken) throw new Error("Unlock the browser first.");
+    // Recover automatically if this tab has no in-memory session yet.
+    // The server issues a short-lived proxy session without a keyboard/PIN step.
+    if (!sessionToken || !validSessionLocally(sessionToken)) {
+      status.textContent = "Connecting browser automatically…";
+      await unlock("");
+    }
     await openTarget(addressInput.value);
   } catch (error) {
     status.textContent = error?.message || "Could not open that site.";
