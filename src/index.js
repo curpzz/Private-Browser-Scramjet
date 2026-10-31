@@ -57,8 +57,14 @@ const fastify = Fastify({
   bodyLimit: 2048,
   serverFactory: (handler) => createServer()
     .on("request", (req, res) => {
-      res.setHeader("Cross-Origin-Opener-Policy", "same-origin");
-      res.setHeader("Cross-Origin-Embedder-Policy", "require-corp");
+      // Keep cross-origin isolation on the browser shell only. Applying
+      // COOP/COEP to Scramjet's proxied responses can block third-party
+      // scripts, workers, media, and game assets used by Discord/now.gg.
+      const pathname = new URL(req.url || "/", "http://localhost").pathname;
+      if (!pathname.startsWith("/scramjet/")) {
+        res.setHeader("Cross-Origin-Opener-Policy", "same-origin");
+        res.setHeader("Cross-Origin-Embedder-Policy", "require-corp");
+      }
       res.setHeader("X-Content-Type-Options", "nosniff");
       res.setHeader("Referrer-Policy", "strict-origin-when-cross-origin");
       handler(req, res);
