@@ -254,11 +254,12 @@ browseForm.addEventListener("submit", async (event) => {
 
 /* Intro shortcut and always-proxied workspace navigation */
 (() => {
- const intro=document.getElementById("intro");let count=0,timer;
+ const intro=document.getElementById("intro");
  const dismiss=()=>{intro?.classList.add("dismissed");sessionStorage.setItem("zux-intro-seen","1")};
- if(sessionStorage.getItem("zux-intro-seen")==="1")dismiss();
+ // Never require Enter or another keyboard shortcut to unlock the browser.
+ // If an intro overlay exists, dismiss it automatically during startup.
+ dismiss();
  document.getElementById("intro-continue")?.addEventListener("click",dismiss);
- document.addEventListener("keydown",e=>{if(e.key!=="Enter"||!intro||intro.classList.contains("dismissed"))return;e.preventDefault();count++;clearTimeout(timer);if(count>=2)dismiss();else timer=setTimeout(()=>count=0,1800)});
  const pages=["home","history","games","movies","apps","settings"];
  const show=name=>{pages.forEach(p=>document.getElementById(p==="home"?"start-page":p+"-page")?.classList.toggle("hidden",p!==name));document.querySelectorAll(".side-link").forEach(b=>b.classList.toggle("active",b.dataset.page===name))};
  document.querySelectorAll(".side-link[data-page]").forEach(b=>b.addEventListener("click",()=>show(b.dataset.page)));
