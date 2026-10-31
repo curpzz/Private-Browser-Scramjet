@@ -25,9 +25,10 @@ Object.assign(wisp.options, {
   allow_direct_ip: false,
   stream_limit_total: 128,
   stream_limit_per_host: 32,
-  dns_method: "resolve",
-  dns_servers: ["1.1.1.1", "1.0.0.1"],
-  dns_result_order: "ipv4first",
+  // Use the host's system resolver. Render's runtime DNS is available
+  // through Node lookup; forcing external DNS-over-UDP resolvers caused
+  // Wisp to fail with "address not resolved" for normal hostnames.
+  dns_method: "lookup",
   dns_ttl: 300
 });
 
