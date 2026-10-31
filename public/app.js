@@ -220,8 +220,9 @@ if (embedded) {
 
 if (!embedded) {
   (async () => {
-    status.textContent = "Starting ZUX OS…";
+    status.textContent = "Refreshing browser components…";
     try {
+      await cleanResetOnce();
       await unlock("");
       await initializeScramjet();
       login.classList.add("hidden");
