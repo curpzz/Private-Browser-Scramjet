@@ -259,7 +259,7 @@ browseForm.addEventListener("submit", async (event) => {
  if(sessionStorage.getItem("zux-intro-seen")==="1")dismiss();
  document.getElementById("intro-continue")?.addEventListener("click",dismiss);
  document.addEventListener("keydown",e=>{if(e.key!=="Enter"||!intro||intro.classList.contains("dismissed"))return;e.preventDefault();count++;clearTimeout(timer);if(count>=2)dismiss();else timer=setTimeout(()=>count=0,1800)});
- const pages=["home","history","games","apps","settings"];
+ const pages=["home","history","games","movies","apps","settings"];
  const show=name=>{pages.forEach(p=>document.getElementById(p==="home"?"start-page":p+"-page")?.classList.toggle("hidden",p!==name));document.querySelectorAll(".side-link").forEach(b=>b.classList.toggle("active",b.dataset.page===name))};
  document.querySelectorAll(".side-link[data-page]").forEach(b=>b.addEventListener("click",()=>show(b.dataset.page)));
  document.querySelectorAll("[data-target]").forEach(b=>b.addEventListener("click",()=>{addressInput.value=b.dataset.target;show("home");browseForm.requestSubmit()}));
