@@ -135,7 +135,8 @@ async function initializeScramjet() {
   await connection.setTransport("/libcurl/index.mjs", [{ websocket: wispUrl }]);
 
   await prepareScramjetDatabase();
-  await registerSW();
+  // Match the Scramjet 1.1.0 reference app: initialize the controller
+  // before registering the service worker, then let the worker take control.
   const { ScramjetController } = $scramjetLoadController();
   scramjet = new ScramjetController({
     files: {
@@ -145,6 +146,7 @@ async function initializeScramjet() {
     }
   });
   await scramjet.init();
+  await registerSW();
 }
 
 async function openTarget(raw) {
