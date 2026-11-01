@@ -128,7 +128,10 @@ async function initializeScramjet() {
 
   // Configure BareMux before registering/activating the service worker.
   // Otherwise the first intercepted request can race ahead without a transport.
-  connection = new BareMux.BareMuxConnection("/baremux/worker.js");
+  // Load BareMux as an ES module so it does not depend on a browser global.
+  // This avoids "BareMux is not defined" when the classic script is blocked or delayed.
+  const { BareMuxConnection } = await import("/baremux/index.mjs");
+  connection = new BareMuxConnection("/baremux/worker.js");
   // Keep the Wisp endpoint canonical: libcurl requires the URL to end in "/".
   // The short-lived session is sent separately as a scoped HttpOnly cookie.
   const wispUrl = (location.protocol === "https:" ? "wss://" : "ws://") + location.host + "/wisp/";
