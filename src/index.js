@@ -131,7 +131,6 @@ fastify.get("/baremux/index.js", async (_request, reply) => {
       .header("Cache-Control", "public, max-age=3600")
       .send(file);
   } catch (error) {
-    request.log?.error?.(error);
     fastify.log.error({ error, baremuxPath }, "BareMux index.js missing");
     return reply.code(500).type("text/plain").send("BareMux index.js missing from installed package");
   }
