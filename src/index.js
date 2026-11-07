@@ -122,13 +122,43 @@ fastify.post("/api/session", async (request, reply) => {
   return reply.header("Set-Cookie", cookie).send({ token, expiresIn: 4 * 60 * 60 });
 });
 
-// Serve BareMux using the package's official static directory helper.
-// Do not shadow these paths with hand-written file routes: baremuxPath is
-// the package-maintained asset root and includes index.js plus worker.js.
+// Serve BareMux files explicitly from the package path. This avoids
+// Fastify's root public directory wildcard taking precedence over /baremux/*.
+fastify.get("/baremux/index.js", async (_request, reply) => {
+  try {
+    const file = await readFile(resolve(baremuxPath, "index.js"));
+    return reply.type("application/javascript; charset=utf-8")
+      .header("Cache-Control", "public, max-age=3600")
+      .send(file);
+  } catch (error) {
+    request.log?.error?.(error);
+    fastify.log.error({ error, baremuxPath }, "BareMux index.js missing");
+    return reply.code(500).type("text/plain").send("BareMux index.js missing from installed package");
+  }
+});
+fastify.get("/baremux/worker.js", async (_request, reply) => {
+  try {
+    const file = await readFile(resolve(baremuxPath, "worker.js"));
+    return reply.type("application/javascript; charset=utf-8")
+      .header("Cache-Control", "public, max-age=3600")
+      .send(file);
+  } catch (error) {
+    fastify.log.error({ error, baremuxPath }, "BareMux worker.js missing");
+    return reply.code(500).type("text/plain").send("BareMux worker.js missing from installed package");
+  }
+});
+fastify.get("/api/debug/baremux", async (_request, reply) => {
+  try {
+    const files = await readdir(baremuxPath);
+    return { ok: files.includes("index.js") && files.includes("worker.js"), path: baremuxPath, files };
+  } catch (error) {
+    fastify.log.error({ error, baremuxPath }, "BareMux directory unavailable");
+    return reply.code(500).send({ ok: false, path: baremuxPath, error: error.message });
+  }
+});
 await fastify.register(fastifyStatic, { root: publicPath, decorateReply: true, index: ["index.html"] });
 await fastify.register(fastifyStatic, { root: scramjetPath, prefix: "/scram/", decorateReply: false });
 await fastify.register(fastifyStatic, { root: libcurlPath, prefix: "/libcurl/", decorateReply: false });
-await fastify.register(fastifyStatic, { root: baremuxPath, prefix: "/baremux/", decorateReply: false });
 fastify.setNotFoundHandler((request, reply) => {
   if (request.url.startsWith("/api/")) return reply.code(404).send({ error: "Not found" });
   return reply.code(404).type("text/plain").send("Not found");
