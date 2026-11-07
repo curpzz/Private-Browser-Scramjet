@@ -128,20 +128,15 @@ async function initializeScramjet() {
 
   // Configure BareMux before registering/activating the service worker.
   // Otherwise the first intercepted request can race ahead without a transport.
-  // The published bare-mux 2.1.x browser bundle is index.js (UMD),
-  // not index.mjs. Load it as a classic script and read its documented global.
-  if (!window.BareMux?.BareMuxConnection) {
-    await new Promise((resolve, reject) => {
-      const script = document.createElement("script");
-      script.src = "/baremux/index.js";
-      script.onload = resolve;
-      script.onerror = () => reject(new Error("BareMux failed to load from /baremux/index.js. Check the Render asset route."));
-      document.head.appendChild(script);
-    });
+  // Load the package's actual browser ESM entry from the explicit server route.
+  let BareMuxConnection;
+  try {
+    ({ BareMuxConnection } = await import("/baremux/index.mjs"));
+  } catch (error) {
+    throw new Error("BareMux module could not load from /baremux/index.mjs: " + (error?.message || error));
   }
-  const BareMuxConnection = window.BareMux?.BareMuxConnection;
   if (typeof BareMuxConnection !== "function") {
-    throw new Error("BareMux loaded, but its connection constructor was not found.");
+    throw new Error("BareMux module loaded but BareMuxConnection was not exported.");
   }
   connection = new BareMuxConnection("/baremux/worker.js");
   // Keep the Wisp endpoint canonical: libcurl requires the URL to end in "/".
