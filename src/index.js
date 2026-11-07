@@ -126,13 +126,13 @@ await fastify.register(fastifyStatic, { root: publicPath, decorateReply: true, i
 await fastify.register(fastifyStatic, { root: scramjetPath, prefix: "/scram/", decorateReply: false });
 await fastify.register(fastifyStatic, { root: libcurlPath, prefix: "/libcurl/", decorateReply: false });
 await fastify.register(fastifyStatic, { root: baremuxPath, prefix: "/baremux/", decorateReply: false });
-// Serve built BareMux files directly from the package dist directory.
-fastify.get("/baremux/index.mjs", async (_request, reply) => {
+// BareMux 2.1.9 ships a classic browser bundle (index.js) and worker.js.
+fastify.get("/baremux/index.js", async (_request, reply) => {
   try {
-    const file = await readFile(resolve(baremuxPath, "index.mjs"));
+    const file = await readFile(resolve(baremuxPath, "index.js"));
     return reply.type("text/javascript; charset=utf-8").send(file);
   } catch {
-    return reply.code(404).send("BareMux module asset missing");
+    return reply.code(404).send("BareMux index.js missing from package assets");
   }
 });
 fastify.get("/baremux/worker.js", async (_request, reply) => {
@@ -140,15 +140,15 @@ fastify.get("/baremux/worker.js", async (_request, reply) => {
     const file = await readFile(resolve(baremuxPath, "worker.js"));
     return reply.type("text/javascript; charset=utf-8").send(file);
   } catch {
-    return reply.code(404).send("BareMux worker asset missing");
+    return reply.code(404).send("BareMux worker.js missing from package assets");
   }
 });
 fastify.get("/api/debug/baremux", async () => {
-  const files = await Promise.all(["index.mjs", "worker.js"].map(async (name) => {
+  const files = await Promise.all(["index.js", "worker.js"].map(async (name) => {
     try { await readFile(resolve(baremuxPath, name)); return { name, exists: true }; }
     catch { return { name, exists: false }; }
   }));
-  return { files };
+  return { directory: baremuxPath, files };
 });
 fastify.setNotFoundHandler((request, reply) => {
   if (request.url.startsWith("/api/")) return reply.code(404).send({ error: "Not found" });
