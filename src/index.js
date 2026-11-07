@@ -129,7 +129,6 @@ fastify.get("/baremux/index.js", async (_request, reply) => {
     const file = await readFile(resolve(baremuxPath, "index.js"));
     return reply.type("text/javascript; charset=utf-8").send(file);
   } catch (error) {
-    request.log?.error?.(error);
     return reply.code(404).type("text/plain").send("BareMux index.js missing from package assets");
   }
 });
