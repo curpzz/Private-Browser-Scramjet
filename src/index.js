@@ -124,6 +124,14 @@ await fastify.register(fastifyStatic, { root: publicPath, decorateReply: true, i
 await fastify.register(fastifyStatic, { root: scramjetPath, prefix: "/scram/", decorateReply: false });
 await fastify.register(fastifyStatic, { root: libcurlPath, prefix: "/libcurl/", decorateReply: false });
 await fastify.register(fastifyStatic, { root: baremuxPath, prefix: "/baremux/", decorateReply: false });
+// Pin the two BareMux browser assets to explicit routes. This avoids a
+// static-prefix resolution miss on some Fastify deployments.
+fastify.get("/baremux/index.js", async (_request, reply) =>
+  reply.type("text/javascript; charset=utf-8").sendFile("index.js", baremuxPath)
+);
+fastify.get("/baremux/worker.js", async (_request, reply) =>
+  reply.type("text/javascript; charset=utf-8").sendFile("worker.js", baremuxPath)
+);
 fastify.setNotFoundHandler((request, reply) => {
   if (request.url.startsWith("/api/")) return reply.code(404).send({ error: "Not found" });
   return reply.code(404).type("text/plain").send("Not found");
