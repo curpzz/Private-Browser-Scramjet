@@ -122,38 +122,14 @@ fastify.post("/api/session", async (request, reply) => {
   return reply.header("Set-Cookie", cookie).send({ token, expiresIn: 4 * 60 * 60 });
 });
 
-// Serve BareMux files explicitly from the package path. This avoids
-// Fastify's root public directory wildcard taking precedence over /baremux/*.
-fastify.get("/baremux/index.js", async (_request, reply) => {
-  try {
-    const file = await readFile(resolve(baremuxPath, "index.js"));
-    return reply.type("application/javascript; charset=utf-8")
-      .header("Cache-Control", "public, max-age=3600")
-      .send(file);
-  } catch (error) {
-    fastify.log.error({ error, baremuxPath }, "BareMux index.js missing");
-    return reply.code(500).type("text/plain").send("BareMux index.js missing from installed package");
-  }
-});
-fastify.get("/baremux/worker.js", async (_request, reply) => {
-  try {
-    const file = await readFile(resolve(baremuxPath, "worker.js"));
-    return reply.type("application/javascript; charset=utf-8")
-      .header("Cache-Control", "public, max-age=3600")
-      .send(file);
-  } catch (error) {
-    fastify.log.error({ error, baremuxPath }, "BareMux worker.js missing");
-    return reply.code(500).type("text/plain").send("BareMux worker.js missing from installed package");
-  }
-});
-fastify.get("/api/debug/baremux", async (_request, reply) => {
-  try {
-    const files = await readdir(baremuxPath);
-    return { ok: files.includes("index.js") && files.includes("worker.js"), path: baremuxPath, files };
-  } catch (error) {
-    fastify.log.error({ error, baremuxPath }, "BareMux directory unavailable");
-    return reply.code(500).send({ ok: false, path: baremuxPath, error: error.message });
-  }
+// BareMux publishes its browser assets through this directory. Mount it
+// with the same static-file handler used by the upstream Fastify integration.
+await fastify.register(fastifyStatic, {
+  root: baremuxPath,
+  prefix: "/baremux/",
+  decorateReply: false,
+  immutable: true,
+  maxAge: "1h"
 });
 await fastify.register(fastifyStatic, { root: publicPath, decorateReply: true, index: ["index.html"] });
 await fastify.register(fastifyStatic, { root: scramjetPath, prefix: "/scram/", decorateReply: false });
