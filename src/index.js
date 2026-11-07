@@ -1,5 +1,7 @@
 import { createServer } from "node:http";
 import { fileURLToPath } from "node:url";
+import { readFile } from "node:fs/promises";
+import { resolve } from "node:path";
 import { createHmac, timingSafeEqual } from "node:crypto";
 import { server as wisp, logging } from "@mercuryworkshop/wisp-js/server";
 import Fastify from "fastify";
@@ -124,14 +126,30 @@ await fastify.register(fastifyStatic, { root: publicPath, decorateReply: true, i
 await fastify.register(fastifyStatic, { root: scramjetPath, prefix: "/scram/", decorateReply: false });
 await fastify.register(fastifyStatic, { root: libcurlPath, prefix: "/libcurl/", decorateReply: false });
 await fastify.register(fastifyStatic, { root: baremuxPath, prefix: "/baremux/", decorateReply: false });
-// Pin the two BareMux browser assets to explicit routes. This avoids a
-// static-prefix resolution miss on some Fastify deployments.
-fastify.get("/baremux/index.js", async (_request, reply) =>
-  reply.type("text/javascript; charset=utf-8").sendFile("index.js", baremuxPath)
-);
-fastify.get("/baremux/worker.js", async (_request, reply) =>
-  reply.type("text/javascript; charset=utf-8").sendFile("worker.js", baremuxPath)
-);
+// Serve built BareMux files directly from the package dist directory.
+fastify.get("/baremux/index.mjs", async (_request, reply) => {
+  try {
+    const file = await readFile(resolve(baremuxPath, "index.mjs"));
+    return reply.type("text/javascript; charset=utf-8").send(file);
+  } catch {
+    return reply.code(404).send("BareMux module asset missing");
+  }
+});
+fastify.get("/baremux/worker.js", async (_request, reply) => {
+  try {
+    const file = await readFile(resolve(baremuxPath, "worker.js"));
+    return reply.type("text/javascript; charset=utf-8").send(file);
+  } catch {
+    return reply.code(404).send("BareMux worker asset missing");
+  }
+});
+fastify.get("/api/debug/baremux", async () => {
+  const files = await Promise.all(["index.mjs", "worker.js"].map(async (name) => {
+    try { await readFile(resolve(baremuxPath, name)); return { name, exists: true }; }
+    catch { return { name, exists: false }; }
+  }));
+  return { files };
+});
 fastify.setNotFoundHandler((request, reply) => {
   if (request.url.startsWith("/api/")) return reply.code(404).send({ error: "Not found" });
   return reply.code(404).type("text/plain").send("Not found");
