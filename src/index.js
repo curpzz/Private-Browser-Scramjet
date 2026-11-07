@@ -1,6 +1,6 @@
 import { createServer } from "node:http";
 import { fileURLToPath } from "node:url";
-import { readFile } from "node:fs/promises";
+import { readFile, readdir, stat } from "node:fs/promises";
 import { resolve } from "node:path";
 import { createHmac, timingSafeEqual } from "node:crypto";
 import { server as wisp, logging } from "@mercuryworkshop/wisp-js/server";
@@ -122,30 +122,53 @@ fastify.post("/api/session", async (request, reply) => {
   return reply.header("Set-Cookie", cookie).send({ token, expiresIn: 4 * 60 * 60 });
 });
 
-// Register explicit BareMux routes BEFORE the static wildcard mount.
-// Otherwise @fastify/static can capture /baremux/* first and return a 404.
+// Resolve BareMux assets from the package's exported directory. Package
+// layouts can differ between published builds, so check common output folders.
+async function findBareMuxAsset(name) {
+  const candidates = [
+    resolve(baremuxPath, name),
+    resolve(baremuxPath, "dist", name),
+    resolve(baremuxPath, "build", name)
+  ];
+  for (const candidate of candidates) {
+    try {
+      const info = await stat(candidate);
+      if (info.isFile()) return { path: candidate, data: await readFile(candidate) };
+    } catch {}
+  }
+  throw new Error("Missing " + name + " under " + baremuxPath);
+}
 fastify.get("/baremux/index.js", async (_request, reply) => {
   try {
-    const file = await readFile(resolve(baremuxPath, "index.js"));
-    return reply.type("text/javascript; charset=utf-8").send(file);
+    const asset = await findBareMuxAsset("index.js");
+    return reply.type("text/javascript; charset=utf-8").header("Cache-Control", "no-store").send(asset.data);
   } catch (error) {
-    return reply.code(404).type("text/plain").send("BareMux index.js missing from package assets");
+    fastify.log.error({ err: error }, "BareMux index.js could not be served");
+    return reply.code(404).type("text/plain").send("BareMux index.js not found in package directory");
   }
 });
 fastify.get("/baremux/worker.js", async (_request, reply) => {
   try {
-    const file = await readFile(resolve(baremuxPath, "worker.js"));
-    return reply.type("text/javascript; charset=utf-8").send(file);
-  } catch {
-    return reply.code(404).type("text/plain").send("BareMux worker.js missing from package assets");
+    const asset = await findBareMuxAsset("worker.js");
+    return reply.type("text/javascript; charset=utf-8").header("Cache-Control", "no-store").send(asset.data);
+  } catch (error) {
+    fastify.log.error({ err: error }, "BareMux worker.js could not be served");
+    return reply.code(404).type("text/plain").send("BareMux worker.js not found in package directory");
   }
 });
-fastify.get("/api/debug/baremux", async () => {
+fastify.get("/api/debug/baremux", async (_request, reply) => {
+  let entries = [];
+  try { entries = await readdir(baremuxPath, { withFileTypes: true }); }
+  catch (error) { return reply.code(500).send({ directory: baremuxPath, error: error.message }); }
   const files = await Promise.all(["index.js", "worker.js"].map(async (name) => {
-    try { await readFile(resolve(baremuxPath, name)); return { name, exists: true }; }
-    catch { return { name, exists: false }; }
+    try {
+      const asset = await findBareMuxAsset(name);
+      return { name, exists: true, path: asset.path, bytes: asset.data.byteLength };
+    } catch (error) {
+      return { name, exists: false, error: error.message };
+    }
   }));
-  return { directory: baremuxPath, files };
+  return { directory: baremuxPath, entries: entries.map(entry => ({ name: entry.name, directory: entry.isDirectory() })), files };
 });
 await fastify.register(fastifyStatic, { root: publicPath, decorateReply: true, index: ["index.html"] });
 await fastify.register(fastifyStatic, { root: scramjetPath, prefix: "/scram/", decorateReply: false });
