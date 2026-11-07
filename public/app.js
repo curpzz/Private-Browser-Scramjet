@@ -126,22 +126,12 @@ async function initializeScramjet() {
     throw new Error("The proxy session is not ready. Reload and try again.");
   }
 
-  // Configure BareMux before registering/activating the service worker.
-  // Otherwise the first intercepted request can race ahead without a transport.
-  // BareMux 2.1.9 ships a classic browser bundle, not index.mjs.
-  if (!window.BareMux?.BareMuxConnection) {
-    await new Promise((resolve, reject) => {
-      const script = document.createElement("script");
-      script.src = "/baremux/index.js";
-      script.async = true;
-      script.onload = resolve;
-      script.onerror = () => reject(new Error("Could not load /baremux/index.js. Check /api/debug/baremux."));
-      document.head.appendChild(script);
-    });
-  }
-  const BareMuxConnection = window.BareMux?.BareMuxConnection;
+  // Load BareMux from its published ES module entry point. The package's
+  // browser assets expose index.mjs; index.js is not present in this build.
+  // Configure the transport before registering the service worker.
+  const { BareMuxConnection } = await import("/baremux/index.mjs");
   if (typeof BareMuxConnection !== "function") {
-    throw new Error("BareMux index.js loaded but did not expose BareMuxConnection.");
+    throw new Error("BareMux module loaded but did not export BareMuxConnection.");
   }
   connection = new BareMuxConnection("/baremux/worker.js");
   // Keep the Wisp endpoint canonical: libcurl requires the URL to end in "/".
