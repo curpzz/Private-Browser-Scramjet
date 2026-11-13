@@ -270,7 +270,7 @@ browseForm.addEventListener("submit", async (event) => {
  // If an intro overlay exists, dismiss it automatically during startup.
  dismiss();
  document.getElementById("intro-continue")?.addEventListener("click",dismiss);
- const pages=["home","history","games","movies","apps","settings"];
+ const pages=["home","history","games","minecraft","movies","apps","settings"];
  const show=name=>{pages.forEach(p=>document.getElementById(p==="home"?"start-page":p+"-page")?.classList.toggle("hidden",p!==name));document.querySelectorAll(".side-link").forEach(b=>b.classList.toggle("active",b.dataset.page===name))};
  document.querySelectorAll(".side-link[data-page]").forEach(b=>b.addEventListener("click",()=>show(b.dataset.page)));
  document.querySelectorAll("[data-target]").forEach(b=>b.addEventListener("click",()=>{addressInput.value=b.dataset.target;show("home");browseForm.requestSubmit()}));
