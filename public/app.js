@@ -274,7 +274,20 @@ browseForm.addEventListener("submit", async (event) => {
  const show=name=>{pages.forEach(p=>document.getElementById(p==="home"?"start-page":p+"-page")?.classList.toggle("hidden",p!==name));document.querySelectorAll(".side-link").forEach(b=>b.classList.toggle("active",b.dataset.page===name))};
  document.querySelectorAll(".side-link[data-page]").forEach(b=>b.addEventListener("click",()=>show(b.dataset.page)));
  document.querySelectorAll("[data-target]").forEach(b=>b.addEventListener("click",()=>{addressInput.value=b.dataset.target;show("home");browseForm.requestSubmit()}));
- document.getElementById("minecraft-proxy-launch")?.addEventListener("click",()=>{addressInput.value="https://voxelcraft-ecru.vercel.app";show("home");browseForm.requestSubmit()});
+ document.getElementById("minecraft-proxy-launch")?.addEventListener("click",()=>{
+  const host=document.getElementById("minecraft-client-host");
+  if(!host) return;
+  if(!host.querySelector("iframe")){
+    const frame=document.createElement("iframe");
+    frame.title="Minecraft Java 26.3";
+    frame.src="https://typethe0ry.github.io/Gaius/Gaius-26.3.html";
+    frame.allow="fullscreen; gamepad; autoplay";
+    frame.allowFullscreen=true;
+    frame.referrerPolicy="strict-origin-when-cross-origin";
+    host.replaceChildren(frame);
+  }
+  document.getElementById("minecraft-page")?.classList.remove("hidden");
+});
  const key="zux-history",read=()=>{try{return JSON.parse(localStorage.getItem(key)||"[]")}catch{return[]}};
  const render=()=>{const el=document.getElementById("history-list");if(!el)return;el.replaceChildren();const a=read();if(!a.length){el.textContent="Your history is empty";return}a.forEach(url=>{const b=document.createElement("button");b.className="history-entry";b.textContent=url;b.onclick=()=>{addressInput.value=url;show("home");browseForm.requestSubmit()};el.appendChild(b)})};
  document.querySelector('[data-page="history"]')?.addEventListener("click",render);
