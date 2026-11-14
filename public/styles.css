@@ -79,3 +79,21 @@ body.embed-mode #proxy-frame{width:100%;height:100vh;min-height:100vh;border:0;b
 .mantle-unblock-button:active{transform:translateY(0) scale(.98)}
 .mantle-credit{margin:0!important;padding:16px 10px 8px;text-align:center;color:#a99ab8;font-size:12px;opacity:.8}
 @media(max-width:760px){.mantle-unblock-button{min-height:88px;min-width:min(290px,84%)}.mantle-credit{font-size:11px}}
+
+
+/* Slow neon color cycle for the Mantle launch button */
+@keyframes mantleNeonCycle{
+  0%,100%{color:#f4eaff;border-color:#c18cff;background:linear-gradient(120deg,#482078,#24134d);box-shadow:0 0 10px #bd72ff99,0 0 28px #9d54ff66,inset 0 0 14px #c58aff33}
+  33%{color:#e5ffff;border-color:#67eaff;background:linear-gradient(120deg,#124b63,#18244e);box-shadow:0 0 10px #54eaff99,0 0 28px #31c8ff66,inset 0 0 14px #69eaff33}
+  66%{color:#fff0f8;border-color:#ff83c9;background:linear-gradient(120deg,#63234f,#35194e);box-shadow:0 0 10px #ff72c899,0 0 28px #f34bba66,inset 0 0 14px #ff8bd033}
+}
+.mantle-unblock-button{
+  min-width:min(380px,84%);
+  min-height:112px;
+  color:#f4eaff;
+  border:1px solid #c18cff;
+  background:linear-gradient(120deg,#482078,#24134d);
+  animation:mantleNeonCycle 18s ease-in-out infinite;
+}
+.mantle-unblock-button:hover{transform:translateY(-3px) scale(1.015)}
+@media(prefers-reduced-motion:reduce){.mantle-unblock-button{animation:none}}
