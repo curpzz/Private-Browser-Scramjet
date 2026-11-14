@@ -279,8 +279,8 @@ browseForm.addEventListener("submit", async (event) => {
   if(!host) return;
   if(!host.querySelector("iframe")){
     const frame=document.createElement("iframe");
-    frame.title="Minecraft Java 26.3";
-    frame.src="https://typethe0ry.github.io/Gaius/Gaius-26.3.html";
+    frame.title="Minecraft Web Client";
+    frame.src="https://mcraft.fun/";
     frame.allow="fullscreen; gamepad; autoplay";
     frame.allowFullscreen=true;
     frame.referrerPolicy="strict-origin-when-cross-origin";
