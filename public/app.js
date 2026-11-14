@@ -275,19 +275,16 @@ browseForm.addEventListener("submit", async (event) => {
  document.querySelectorAll(".side-link[data-page]").forEach(b=>b.addEventListener("click",()=>show(b.dataset.page)));
  document.querySelectorAll("[data-target]").forEach(b=>b.addEventListener("click",()=>{addressInput.value=b.dataset.target;show("home");browseForm.requestSubmit()}));
  document.getElementById("minecraft-proxy-launch")?.addEventListener("click",()=>{
-  const host=document.getElementById("minecraft-client-host");
-  if(!host) return;
-  if(!host.querySelector("iframe")){
-    const frame=document.createElement("iframe");
-    frame.title="Minecraft Web Client";
-    frame.src="https://mcraft.fun/";
-    frame.allow="fullscreen; gamepad; autoplay";
-    frame.allowFullscreen=true;
-    frame.referrerPolicy="strict-origin-when-cross-origin";
-    host.replaceChildren(frame);
+  // Mantle provides the srcdoc/isolation environment expected by Mineral.
+  // Loading the raw GitHub files directly from ZUX would not provide it.
+  const popup=window.open("https://mantle-menu.pages.dev/","zux-mineral","popup=yes,width=1280,height=820,resizable=yes,scrollbars=yes");
+  if(!popup){
+    status.textContent="Popup blocked. Allow popups for this ZUX OS site, then click Open Mineral again.";
+    return;
   }
-  document.getElementById("minecraft-page")?.classList.remove("hidden");
-});
+  popup.focus();
+  status.textContent="Mantle opened in a separate window. Choose Mineral from its menu.";
+ });
  const key="zux-history",read=()=>{try{return JSON.parse(localStorage.getItem(key)||"[]")}catch{return[]}};
  const render=()=>{const el=document.getElementById("history-list");if(!el)return;el.replaceChildren();const a=read();if(!a.length){el.textContent="Your history is empty";return}a.forEach(url=>{const b=document.createElement("button");b.className="history-entry";b.textContent=url;b.onclick=()=>{addressInput.value=url;show("home");browseForm.requestSubmit()};el.appendChild(b)})};
  document.querySelector('[data-page="history"]')?.addEventListener("click",render);
