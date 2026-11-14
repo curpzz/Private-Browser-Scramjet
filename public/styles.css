@@ -97,3 +97,62 @@ body.embed-mode #proxy-frame{width:100%;height:100vh;min-height:100vh;border:0;b
 }
 .mantle-unblock-button:hover{transform:translateY(-3px) scale(1.015)}
 @media(prefers-reduced-motion:reduce){.mantle-unblock-button{animation:none}}
+
+
+/* Clean, sleek workspace finish */
+:root{font-synthesis:none;text-rendering:optimizeLegibility}
+.app-shell{background:#0b0a12}
+.workspace{background:linear-gradient(180deg,#14101d 0%,#100d17 100%);border-right:1px solid #30263b}
+.brand{padding-bottom:26px}
+.brand-mark{box-shadow:0 0 22px #a77aff35}
+.side-nav{gap:6px}
+.side-link{transition:background .18s ease,border-color .18s ease,color .18s ease,transform .18s ease}
+.side-link:hover{transform:translateX(2px)}
+.side-link.active{background:linear-gradient(100deg,#30203d,#211827);border-color:#5c426f;box-shadow:inset 2px 0 #d0a1ff,0 5px 18px #0003}
+.browser-area{background:#100d16}
+.tab-strip{background:#100d16}
+.tab{box-shadow:0 -5px 18px #0002}
+.nav-toolbar{background:#15101c}
+.address-row{border-color:#473751;box-shadow:inset 0 1px 3px #0008}
+.address-row:focus-within,.start-search:focus-within{border-color:#a987d7;box-shadow:0 0 0 3px #a987d722}
+.go-button,.start-search button{background:linear-gradient(135deg,#c9a5ff,#9e7bd4);color:#17101f;transition:filter .18s ease,transform .18s ease}
+.go-button:hover,.start-search button:hover{filter:brightness(1.12);transform:translateY(-1px)}
+.start-page{max-width:790px}
+.welcome-icon{border-color:#654d78;background:linear-gradient(145deg,#352441,#1a1726);box-shadow:0 10px 35px #0005,0 0 30px #a875e522}
+.start-page h1{letter-spacing:-.055em}
+.saved-empty{background:#130f1a;border-color:#44334e}
+.content-page{padding:clamp(18px,3vw,30px);border:1px solid #382b43;border-radius:18px;background:linear-gradient(145deg,#1b1422dd,#100d17ee);box-shadow:0 18px 55px #0003}
+.content-page h1{letter-spacing:-.045em}
+.quick-grid button,.small-action{border-color:#51405d;background:linear-gradient(145deg,#241a2d,#17121f);transition:transform .18s ease,border-color .18s ease,box-shadow .18s ease}
+.quick-grid button:hover,.small-action:hover{transform:translateY(-2px);border-color:#a987d7;box-shadow:0 8px 24px #0004}
+.browser-footer{background:#100d16}
+.mantle-unblocker-page{border:0;background:transparent;box-shadow:none}
+.mantle-credit{letter-spacing:.01em}
+@media(max-width:760px){
+  .content-page{width:calc(100% - 24px);padding:20px 16px;border-radius:14px}
+  .quick-grid{flex-wrap:wrap}
+  .quick-grid button{flex:1 1 110px}
+}
+
+/* OPEN MANTLE: bright neon rainbow, smoothly fading at twice the previous speed */
+@keyframes mantleRainbowFade{
+  0%{background-position:0% 50%;filter:hue-rotate(0deg);box-shadow:0 0 12px #ff4d8d99,0 0 34px #ff4d8d55, inset 0 0 16px #ffffff24}
+  50%{background-position:100% 50%;filter:hue-rotate(28deg);box-shadow:0 0 16px #54eaffaa,0 0 42px #a75cff77,inset 0 0 18px #ffffff30}
+  100%{background-position:0% 50%;filter:hue-rotate(0deg);box-shadow:0 0 12px #ff4d8d99,0 0 34px #ff4d8d55,inset 0 0 16px #ffffff24}
+}
+.mantle-unblock-button{
+  min-width:min(400px,86%);
+  min-height:116px;
+  border:1px solid #ffffffaa;
+  border-radius:20px;
+  background:linear-gradient(110deg,#ff3b70 0%,#ff9d3d 16%,#f8e84b 32%,#48ed8b 48%,#35dcf5 64%,#657bff 80%,#c45cff 92%,#ff4caa 100%);
+  background-size:220% 220%;
+  color:#fff;
+  text-shadow:0 2px 12px #16051dcc,0 0 20px #ffffffaa;
+  animation:mantleRainbowFade 9s ease-in-out infinite;
+  box-shadow:0 0 14px #ff4d8d99,0 0 38px #a75cff66,inset 0 0 18px #ffffff2b;
+  transition:transform .2s ease,filter .2s ease;
+}
+.mantle-unblock-button:hover{transform:translateY(-3px) scale(1.02);filter:brightness(1.12)}
+.mantle-unblock-button:active{transform:scale(.985)}
+@media(prefers-reduced-motion:reduce){.mantle-unblock-button{animation:none;background-position:50% 50%}}
