@@ -270,10 +270,30 @@ browseForm.addEventListener("submit", async (event) => {
  // If an intro overlay exists, dismiss it automatically during startup.
  dismiss();
  document.getElementById("intro-continue")?.addEventListener("click",dismiss);
- const pages=["home","history","games","minecraft","movies","apps","settings"];
+ const pages=["home","history","games","minecraft","horizon","movies","apps","settings"];
  const show=name=>{pages.forEach(p=>document.getElementById(p==="home"?"start-page":p+"-page")?.classList.toggle("hidden",p!==name));document.querySelectorAll(".side-link").forEach(b=>b.classList.toggle("active",b.dataset.page===name))};
  document.querySelectorAll(".side-link[data-page]").forEach(b=>b.addEventListener("click",()=>show(b.dataset.page)));
  document.querySelectorAll("[data-target]").forEach(b=>b.addEventListener("click",()=>{addressInput.value=b.dataset.target;show("home");browseForm.requestSubmit()}));
+ // Horizon menu-only interface preview: loading -> splash -> main menu -> create-world screen.
+ const horizonPage=document.getElementById("horizon-page");
+ const horizonScreens=[...document.querySelectorAll("[data-horizon-screen]")];
+ let horizonTimer=null;
+ const showHorizonScreen=name=>horizonScreens.forEach(screen=>screen.classList.toggle("hidden",screen.dataset.horizonScreen!==name));
+ const startHorizon=()=>{
+  if(horizonTimer) clearTimeout(horizonTimer);
+  showHorizonScreen("mojang");
+  horizonTimer=setTimeout(()=>showHorizonScreen("splash"),1800);
+ };
+ document.querySelector('[data-page="horizon"]')?.addEventListener("click",startHorizon);
+ horizonPage?.addEventListener("click",event=>{
+  const action=event.target.closest("[data-horizon-action]")?.dataset.horizonAction;
+  if(!action)return;
+  if(action==="continue")showHorizonScreen("menu");
+  else if(action==="create")showHorizonScreen("create");
+  else if(action==="menu")showHorizonScreen("menu");
+  else if(action==="restart")startHorizon();
+  else if(action==="worlds"||action==="options"||action==="not-ready")showHorizonScreen("info");
+ });
  document.getElementById("minecraft-proxy-launch")?.addEventListener("click",()=>{
   // Mantle provides the srcdoc/isolation environment expected by Mineral.
   // Loading the raw GitHub files directly from ZUX would not provide it.
