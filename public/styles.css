@@ -199,3 +199,21 @@ body.embed-mode #proxy-frame{width:100%;height:100vh;min-height:100vh;border:0;b
 .horizon-controls{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 3px 0;color:#9b91a5;font-size:9px;font-weight:900;letter-spacing:.13em}
 .horizon-controls button{padding:7px 10px;border:1px solid #51405d;border-radius:7px;background:#21172b;color:#eee5fa;font-size:10px}
 @media(max-width:600px){.horizon-page{width:calc(100% - 16px);padding:8px;margin:8px auto}.horizon-stage{min-height:calc(100vh - 190px)}.horizon-setting-grid{grid-template-columns:1fr}.horizon-create-actions{flex-direction:column}.horizon-create-actions button{width:100%}}
+
+
+/* Minecraft Beta updates hub */
+.minecraft-beta-page{max-width:900px;margin:34px auto;padding:28px}
+.minecraft-beta-page h1{font-size:clamp(32px,6vw,52px);margin:8px 0}
+.beta-intro{color:var(--muted,#9ca3af);margin-bottom:24px}
+.beta-version-card{display:flex;flex-direction:column;gap:10px;padding:24px;border:1px solid #526174;border-radius:16px;background:linear-gradient(135deg,#1b2b35,#17202b);color:#f4f7fa}
+.beta-label{font-size:10px;font-weight:900;letter-spacing:.16em;color:#a9c7d8}
+.beta-version-card strong{font-size:42px;letter-spacing:-.04em}
+.beta-version-card>span:nth-of-type(2){font-size:12px;color:#b5c1ca}
+.beta-version-card p,.beta-platform-grid p{font-size:13px;line-height:1.55;color:#c6d0d8}
+.beta-version-card a,.beta-official-link{color:#a9d7ff;text-decoration:none;font-weight:700}
+.beta-platform-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:18px 0}
+.beta-platform-grid>div{padding:18px;border:1px solid #3a4654;border-radius:12px;background:#151d27}
+.beta-platform-grid strong{font-size:15px}
+.beta-notice{padding:14px;border-left:3px solid #d7a64b;background:#252219;color:#e7d7b4;font-size:12px;line-height:1.5}
+.beta-official-link{display:inline-block;margin-top:14px}
+@media(max-width:600px){.minecraft-beta-page{margin:14px auto;padding:18px}.beta-platform-grid{grid-template-columns:1fr}}
