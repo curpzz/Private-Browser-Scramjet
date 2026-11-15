@@ -156,3 +156,46 @@ body.embed-mode #proxy-frame{width:100%;height:100vh;min-height:100vh;border:0;b
 .mantle-unblock-button:hover{transform:translateY(-3px) scale(1.02);filter:brightness(1.12)}
 .mantle-unblock-button:active{transform:scale(.985)}
 @media(prefers-reduced-motion:reduce){.mantle-unblock-button{animation:none;background-position:50% 50%}}
+
+
+/* Horizon menu-only interface preview */
+.horizon-page{width:calc(100% - 36px);max-width:1100px;margin:18px auto;padding:14px;background:#101010;border:1px solid #393939;border-radius:14px}
+.horizon-stage{position:relative;min-height:min(690px,calc(100vh - 210px));overflow:hidden;background:linear-gradient(180deg,#17202a,#101820 55%,#0a0d12);border:1px solid #454545;border-radius:8px;font-family:Arial,system-ui,sans-serif;color:#fff}
+.horizon-screen{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;flex-direction:column;text-align:center;padding:24px}
+.horizon-mojang{background:radial-gradient(ellipse at 50% 45%,#4b2020 0,#171313 48%,#090909 100%)}
+.mojang-mark{width:76px;height:76px;display:grid;place-items:center;background:#b72c2c;color:white;font-weight:1000;font-size:54px;letter-spacing:-7px;padding-right:7px;box-shadow:0 8px 32px #0009}
+.mojang-wordmark{margin-top:18px;font-size:clamp(20px,4vw,34px);font-weight:1000;letter-spacing:.12em}
+.horizon-mojang p{color:#c6c6c6;font-size:13px;margin:28px 0 14px}
+.horizon-loading{width:min(260px,70%);height:5px;background:#555;border-radius:20px;overflow:hidden}
+.horizon-loading span{display:block;width:38%;height:100%;background:#fff;animation:horizonLoad 1.4s ease-in-out infinite}
+@keyframes horizonLoad{0%{transform:translateX(-110%)}100%{transform:translateX(280%)}}
+.horizon-splash{background:radial-gradient(ellipse at 50% 42%,#344b5a 0,#18232d 46%,#0b1118 100%)}
+.horizon-kicker{font-size:10px;letter-spacing:.24em;color:#b9c8d1;font-weight:800}
+.horizon-logo{margin:18px 0 4px;font-size:clamp(54px,11vw,112px);font-weight:1000;letter-spacing:-.09em;text-shadow:0 5px 0 #27343d,0 12px 35px #000b}
+.horizon-splash p{color:#c2d0d8;font-size:14px}
+.horizon-primary,.horizon-menu-buttons button,.horizon-create-card button{min-width:230px;padding:13px 18px;border:2px solid #e2e2e2;border-radius:3px;background:linear-gradient(#777,#555);color:#fff;font-weight:800;text-shadow:0 1px 2px #000;box-shadow:0 4px 0 #222;cursor:pointer}
+.horizon-primary:hover,.horizon-menu-buttons button:hover,.horizon-create-card button:hover{filter:brightness(1.2)}
+.horizon-splash .horizon-primary{margin-top:32px}
+.horizon-splash small{position:absolute;bottom:18px;color:#aab5bc;font-size:10px}
+.horizon-menu{background:linear-gradient(#18232b99,#0b1118dd),repeating-linear-gradient(135deg,#34434b 0 2px,#27353e 2px 4px)}
+.horizon-menu-logo{font-size:clamp(50px,9vw,90px);font-weight:1000;letter-spacing:-.08em;text-shadow:0 5px 0 #202b31,0 12px 24px #000}
+.horizon-menu-buttons{display:flex;flex-direction:column;gap:10px;margin-top:35px}
+.horizon-menu-buttons button{width:min(330px,78vw)}
+.horizon-menu-foot{position:absolute;bottom:18px;color:#b3c0c8;font-size:10px}
+.horizon-create{background:linear-gradient(#141e26dd,#0b1016ee),repeating-linear-gradient(45deg,#33414a 0 2px,#28343b 2px 4px)}
+.horizon-create-card{width:min(570px,94%);padding:clamp(18px,4vw,32px);background:#d7d7d7;color:#202020;border:3px solid #fff;box-shadow:0 14px 40px #0009;text-align:left}
+.horizon-create-title{font-size:clamp(22px,4vw,32px);font-weight:900;margin-bottom:24px}
+.horizon-create-card label{display:flex;flex-direction:column;gap:7px;margin:12px 0;font-size:12px;font-weight:800}
+.horizon-create-card input,.horizon-create-card select{width:100%;padding:11px;border:2px solid #777;border-radius:2px;background:#fff;color:#222;font:inherit}
+.horizon-setting-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.horizon-toggle-row{display:flex;justify-content:space-between;padding:12px 0;border-top:1px solid #aaa;font-size:13px;font-weight:800}
+.horizon-toggle{padding:4px 12px;background:#555;color:#fff}
+.horizon-create-actions{display:flex;justify-content:space-between;gap:12px;margin-top:18px}
+.horizon-create-actions button{min-width:0;flex:1}
+.horizon-create-actions button:first-child{background:#777}
+.horizon-create-card .horizon-demo-note{font-size:11px;color:#555;line-height:1.5;margin:18px 0 0}
+.horizon-info .horizon-create-card p{color:#333;font-size:13px;line-height:1.5}
+.horizon-info .horizon-create-card button{margin-top:12px}
+.horizon-controls{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 3px 0;color:#9b91a5;font-size:9px;font-weight:900;letter-spacing:.13em}
+.horizon-controls button{padding:7px 10px;border:1px solid #51405d;border-radius:7px;background:#21172b;color:#eee5fa;font-size:10px}
+@media(max-width:600px){.horizon-page{width:calc(100% - 16px);padding:8px;margin:8px auto}.horizon-stage{min-height:calc(100vh - 190px)}.horizon-setting-grid{grid-template-columns:1fr}.horizon-create-actions{flex-direction:column}.horizon-create-actions button{width:100%}}
