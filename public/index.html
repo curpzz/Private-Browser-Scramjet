@@ -6,24 +6,22 @@
   <meta name="theme-color" content="#101827">
   <meta name="description" content="Unblocked Browser">
   <title>Unblocked Browser</title>
-  <link rel="stylesheet" href="/styles.css?v=minecraft-beta-1">
+  <link rel="stylesheet" href="/styles.css?v=ui-cleanup-2">
   <script src="/scram/scramjet.all.js"></script>
   <script src="/register-sw.js?v=ub-12-baremux" defer></script>
   <script src="/baremux/index.js?v=ub-12-baremux" defer></script>
-  <script src="/app.js?v=minecraft-beta-1" defer></script>
+  <script src="/app.js?v=ui-cleanup-2" defer></script>
 </head>
 <body>
   <div class="app-shell">
     <aside class="workspace">
       <div class="brand"><div class="brand-mark">UB</div><div><strong>UNBLOCKED</strong><span>BROWSER</span></div></div>
-      <div class="workspace-label">WORKSPACE</div><nav class="side-nav"><button class="side-link active" data-page="home">⌂　Home</button><button class="side-link" data-target="https://www.youtube.com">▶　YouTube</button><button class="side-link" data-target="https://www.tiktok.com">♪　TikTok</button><button class="side-link" data-page="movies">▣　Movies</button><button class="side-link" data-page="history">◷　History</button><button class="side-link" data-page="games">♧　Games</button><button class="side-link" data-page="minecraft-beta">🧪　Minecraft Beta</button><button class="side-link" data-page="blocklands">⛏　Minecraft</button><button class="side-link" data-page="apps">▦　Apps</button><button class="side-link" data-page="settings">⚙　Settings</button></nav>
-      <button class="workspace-setting" type="button">⚙ <span>Local workspace settings</span></button>
-      <div class="workspace-note">Your browser workspace</div>
-      <div class="sidebar-bottom"><span class="online-dot"></span> Local session</div>
+      <div class="workspace-label">APPS</div><nav class="side-nav"><button class="side-link active" data-page="home">⌂　Home</button><button class="side-link" data-target="https://www.youtube.com">▶　YouTube</button><button class="side-link" data-target="https://www.tiktok.com">♪　TikTok</button><button class="side-link" data-target="https://discord.com/app">☁　Discord</button><button class="side-link" data-page="movies">▣　Movies</button><button class="side-link" data-page="history">◷　History</button><button class="side-link" data-page="games">♧　Games</button><button class="side-link" data-page="minecraft-beta">🧪　Minecraft Beta</button><button class="side-link" data-page="blocklands">⛏　Minecraft</button><button class="side-link" data-page="calculator">▦　Calculator</button><button class="side-link" data-page="settings">⚙　Settings</button></nav>
+
     </aside>
     <main class="browser-area">
       <div class="tab-strip">
-        <div class="tab active"><span class="tab-favicon">◎</span> UB New Tab <span class="tab-close">×</span></div>
+        <div id="tabs" class="tabs"><button class="tab active" data-tab-id="1"><span class="tab-favicon">◎</span><span class="tab-title">New</span><span class="tab-close">×</span></button></div>
         <button class="new-tab" type="button" aria-label="New tab">+</button>
       </div>
       <section id="login" class="hidden">
@@ -48,10 +46,10 @@
           <form id="start-search" class="start-search">
             <span>⌕</span><input id="start-address" type="text" placeholder="Search the web or enter an address…"><button type="submit">Search</button>
           </form>
-          <div class="saved-heading"><span>YOUR SAVED SITES</span><button type="button" class="quick-links">Quick Links <span>⌄</span></button></div>
-          <div class="saved-empty"><div class="star">☆</div><strong>No saved websites yet</strong><span>Open a website and press ☆ in the address bar to save it</span></div>
+          <div class="saved-heading"><span>BOOKMARKS</span><button type="button" class="quick-links">Quick Links <span>⌄</span></button></div>
+          <div class="saved-empty"><div class="star">☆</div><strong>No bookmarks yet</strong><span>Your saved websites will appear here</span></div>
         </div>
-        <section id="history-page" class="content-page hidden"><p class="eyebrow">YOUR RECENT ACTIVITY</p><h1>History.</h1><p>Recent links and searches from this device.</p><button id="clear-history" class="small-action">Clear history</button><div id="history-list" class="empty-panel">Your history is empty</div></section><section id="games-page" class="content-page hidden"><p class="eyebrow">PLAY SOMETHING</p><h1>Games.</h1><div class="quick-grid"><button data-target="https://now.gg">now.gg</button><button data-target="https://poki.com">Poki</button><button data-target="https://crazygames.com">CrazyGames</button></div></section><section id="blocklands-page" class="content-page blocklands-page hidden"><div class="blocklands-head"><div><p class="eyebrow">BROWSER MINECRAFT</p><h1>Mineral.</h1><p>Open Mineral in its own game window.</p></div><button class="blocklands-tag" id="open-mineral" type="button">OPEN MINERAL ↗</button></div><p class="beta-notice">If the game window does not appear, allow pop-ups for this site and tap Open Mineral again.</p></section><section id="minecraft-beta-page" class="content-page minecraft-beta-page hidden">
+        <section id="history-page" class="content-page hidden"><p class="eyebrow">YOUR RECENT ACTIVITY</p><h1>History.</h1><p>Recent links and searches from this device.</p><button id="clear-history" class="small-action">Clear history</button><div id="history-list" class="empty-panel">Your history is empty</div></section><section id="games-page" class="content-page hidden"><p class="eyebrow">PLAY SOMETHING</p><h1>Games.</h1><div class="hooda-game"><h2>Wheelie Bike</h2><p>Hooda Math</p><iframe src="https://www.hoodamath.com/games/wheeliebike.html" title="Wheelie Bike on Hooda Math" allow="fullscreen; autoplay; gamepad" loading="lazy"></iframe><a href="https://www.hoodamath.com/games/wheeliebike.html" target="_blank" rel="noopener noreferrer">Open on Hooda Math ↗</a></div></section><section id="blocklands-page" class="content-page blocklands-page hidden"><div class="blocklands-head"><div><p class="eyebrow">BROWSER MINECRAFT</p><h1>Mineral.</h1><p>Open Mineral in its own game window.</p></div><button class="blocklands-tag" id="open-mineral" type="button">OPEN MINERAL ↗</button></div><p class="beta-notice">If the game window does not appear, allow pop-ups for this site and tap Open Mineral again.</p></section><section id="minecraft-beta-page" class="content-page minecraft-beta-page hidden">
   <p class="eyebrow">MINECRAFT TEST BUILDS</p>
   <h1>Minecraft Beta.</h1>
   <p class="beta-intro">See what's new in the official Minecraft Beta &amp; Preview program.</p>
@@ -68,7 +66,7 @@
   </div>
   <p class="beta-notice">This page is an update hub, not the Minecraft game. It does not install or run Beta inside your browser.</p>
   <a class="beta-official-link" href="https://help.minecraft.net/hc/en-us/articles/360040841471-How-Do-I-Join-and-Leave-the-Minecraft-Beta" target="_blank" rel="noopener noreferrer">Official Minecraft Beta &amp; Preview information ↗</a>
-</section><section id="movies-page" class="content-page hidden"><p class="eyebrow">WATCH SOMETHING</p><h1>Movies & TV.</h1><div class="quick-grid"><button data-target="https://pluto.tv">Pluto TV</button><button data-target="https://www.netflix.com">Netflix</button></div></section><section id="apps-page" class="content-page hidden"><p class="eyebrow">YOUR WORKSPACE</p><h1>Apps.</h1><div class="quick-grid"><button data-target="https://discord.com">Discord</button><button data-target="https://www.youtube.com">YouTube</button></div></section><section id="settings-page" class="content-page hidden"><p class="eyebrow">BROWSER PREFERENCES</p><h1>Settings.</h1><div class="setting-row">Browsing mode <strong>Scramjet Proxy · Always on</strong></div></section><p id="status" class="status" aria-live="polite">Starting browser…</p>
+</section><section id="movies-page" class="content-page hidden"><p class="eyebrow">WATCH SOMETHING</p><h1>Movies & TV.</h1><div class="quick-grid"><button data-target="https://pluto.tv">Pluto TV</button><button data-target="https://www.netflix.com">Netflix</button></div></section><section id="calculator-page" class="content-page hidden"><p class="eyebrow">TOOLS</p><h1>Calculator.</h1><div class="calculator"><input id="calc-display" type="text" value="0" readonly aria-label="Calculator display"><div class="calculator-keys"><button data-calc="clear">C</button><button data-calc="back">⌫</button><button data-calc="op">÷</button><button data-calc="op">×</button><button>7</button><button>8</button><button>9</button><button data-calc="op">−</button><button>4</button><button>5</button><button>6</button><button data-calc="op">+</button><button>1</button><button>2</button><button>3</button><button data-calc="equals">=</button><button class="calc-zero">0</button><button>.</button></div></div></section><section id="settings-page" class="content-page hidden"><p class="eyebrow">BROWSER PREFERENCES</p><h1>Settings.</h1><div class="setting-row">Browsing mode <strong>Scramjet Proxy · Always on</strong></div></section><p id="status" class="status" aria-live="polite">Starting browser…</p>
         <div id="frame-host"></div>
         <footer class="browser-footer"><span>UNBLOCKED BROWSER</span><span>Tabs stay here · Settings save locally</span><span>1 tab</span></footer>
       </section>
@@ -83,7 +81,7 @@
         event.preventDefault(); address.value = startAddress.value;
         document.getElementById("browse-form").requestSubmit();
       });
-      document.querySelector(".nav-button[aria-label='Home']")?.addEventListener("click", () => location.reload());
+      document.querySelector(".nav-button[aria-label='Home']")?.addEventListener("click", () => document.dispatchEvent(new CustomEvent("zux-home")));
     });
   </script>
 </body>
