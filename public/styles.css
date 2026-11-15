@@ -242,3 +242,12 @@ body.embed-mode #proxy-frame{width:100%;height:100vh;min-height:100vh;border:0;b
 .calculator input{width:100%;height:60px;margin-bottom:12px;padding:10px;border:1px solid #493858;border-radius:8px;background:#090910;color:#fff;text-align:right;font-size:26px}
 .calculator-keys{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}.calculator-keys button{min-height:48px;border:1px solid #51405d;border-radius:8px;background:#241a2d;color:#f4eaff;font-size:16px}.calculator-keys button:hover{background:#49345d}.calculator-keys .calc-zero{grid-column:span 2}
 @media(max-width:760px){.hooda-game iframe{height:62vh;min-height:360px}.tab-title{max-width:95px}}
+
+
+/* Green Mantle-style Minecraft launch button */
+.minecraft-launch-wrap{min-height:46vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:12px}
+.minecraft-launch-button{width:min(390px,88%);min-height:112px;padding:22px 36px;border:1px solid #b5ffd0;border-radius:18px;background:linear-gradient(135deg,#35d879,#138b4b);color:#062b17;font-size:clamp(30px,5vw,44px);font-weight:950;letter-spacing:.02em;box-shadow:0 0 16px #35e88788,0 0 42px #20b86644,inset 0 1px 0 #ffffff77;cursor:pointer;transition:transform .18s ease,filter .18s ease,box-shadow .18s ease}
+.minecraft-launch-button:hover{transform:translateY(-3px) scale(1.015);filter:brightness(1.08);box-shadow:0 0 22px #35e887aa,0 0 54px #20b86666}
+.minecraft-launch-button:active{transform:scale(.985)}
+.minecraft-launch-caption{margin:0!important;color:#b7d7c3!important}
+@media(prefers-reduced-motion:reduce){.minecraft-launch-button{transition:none}}
