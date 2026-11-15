@@ -6,17 +6,17 @@
   <meta name="theme-color" content="#101827">
   <meta name="description" content="Unblocked Browser">
   <title>Unblocked Browser</title>
-  <link rel="stylesheet" href="/styles.css?v=mantle-rainbow-9s">
+  <link rel="stylesheet" href="/styles.css?v=horizon-ui-1">
   <script src="/scram/scramjet.all.js"></script>
   <script src="/register-sw.js?v=ub-12-baremux" defer></script>
   <script src="/baremux/index.js?v=ub-12-baremux" defer></script>
-  <script src="/app.js?v=ub-12-baremux" defer></script>
+  <script src="/app.js?v=horizon-ui-1" defer></script>
 </head>
 <body>
   <div class="app-shell">
     <aside class="workspace">
       <div class="brand"><div class="brand-mark">UB</div><div><strong>UNBLOCKED</strong><span>BROWSER</span></div></div>
-      <div class="workspace-label">WORKSPACE</div><nav class="side-nav"><button class="side-link active" data-page="home">⌂　Home</button><button class="side-link" data-target="https://www.youtube.com">▶　YouTube</button><button class="side-link" data-target="https://www.tiktok.com">♪　TikTok</button><button class="side-link" data-page="movies">▣　Movies</button><button class="side-link" data-page="history">◷　History</button><button class="side-link" data-page="games">♧　Games</button><button class="side-link" data-page="minecraft">⛏　Mantle Unblocker</button><button class="side-link" data-page="apps">▦　Apps</button><button class="side-link" data-page="settings">⚙　Settings</button></nav>
+      <div class="workspace-label">WORKSPACE</div><nav class="side-nav"><button class="side-link active" data-page="home">⌂　Home</button><button class="side-link" data-target="https://www.youtube.com">▶　YouTube</button><button class="side-link" data-target="https://www.tiktok.com">♪　TikTok</button><button class="side-link" data-page="movies">▣　Movies</button><button class="side-link" data-page="history">◷　History</button><button class="side-link" data-page="games">♧　Games</button><button class="side-link" data-page="minecraft">⛏　Mantle Unblocker</button><button class="side-link" data-page="horizon">▣　Horizon Minecraft</button><button class="side-link" data-page="apps">▦　Apps</button><button class="side-link" data-page="settings">⚙　Settings</button></nav>
       <button class="workspace-setting" type="button">⚙ <span>Local workspace settings</span></button>
       <div class="workspace-note">Your browser workspace</div>
       <div class="sidebar-bottom"><span class="online-dot"></span> Local session</div>
@@ -56,6 +56,49 @@
     <button id="minecraft-proxy-launch" class="mantle-unblock-button" type="button">OPEN MANTLE</button>
   </div>
   <p class="mantle-credit">Mantle is not mine. I did not make it. Credits to @mantleunblocked on TikTok.</p>
+</section><section id="horizon-page" class="content-page horizon-page hidden">
+  <div class="horizon-stage" id="horizon-stage">
+    <section class="horizon-screen horizon-mojang" data-horizon-screen="mojang">
+      <div class="mojang-mark">M</div><div class="mojang-wordmark">MOJANG STUDIOS</div>
+      <p>Preparing Horizon…</p><div class="horizon-loading"><span></span></div>
+    </section>
+    <section class="horizon-screen horizon-splash hidden" data-horizon-screen="splash">
+      <div class="horizon-kicker">COMMUNITY-BUILT EXPERIENCE</div>
+      <div class="horizon-logo">HORIZON</div>
+      <p>A Minecraft-inspired interface demo</p>
+      <button class="horizon-primary" data-horizon-action="continue">CLICK TO CONTINUE</button>
+      <small>Unofficial interface recreation · Not affiliated with Mojang or Microsoft</small>
+    </section>
+    <section class="horizon-screen horizon-menu hidden" data-horizon-screen="menu">
+      <div class="horizon-menu-logo">HORIZON</div>
+      <div class="horizon-menu-buttons">
+        <button data-horizon-action="create">Create New World</button>
+        <button data-horizon-action="worlds">Select World</button>
+        <button data-horizon-action="options">Options</button>
+      </div>
+      <div class="horizon-menu-foot">A visual demo — game launching is not enabled</div>
+    </section>
+    <section class="horizon-screen horizon-create hidden" data-horizon-screen="create">
+      <div class="horizon-create-card">
+        <div class="horizon-create-title">Create New World</div>
+        <label>World Name<input value="My World" aria-label="World name"></label>
+        <div class="horizon-setting-grid">
+          <label>Game Mode<select><option>Survival</option><option>Creative</option><option>Adventure</option></select></label>
+          <label>Difficulty<select><option>Normal</option><option>Easy</option><option>Hard</option><option>Peaceful</option></select></label>
+        </div>
+        <div class="horizon-toggle-row"><span>Allow Cheats</span><span class="horizon-toggle">OFF</span></div>
+        <div class="horizon-create-actions">
+          <button data-horizon-action="menu">Back</button>
+          <button class="horizon-primary" data-horizon-action="not-ready">Create New World</button>
+        </div>
+        <p class="horizon-demo-note">This is the end of the interface demo. World generation is not connected.</p>
+      </div>
+    </section>
+    <section class="horizon-screen horizon-info hidden" data-horizon-screen="info">
+      <div class="horizon-create-card"><div class="horizon-create-title">Not connected</div><p>This demo recreates the menus only. It does not start or generate a playable world.</p><button data-horizon-action="menu">Back to Menu</button></div>
+    </section>
+  </div>
+  <div class="horizon-controls"><span>HORIZON · INTERFACE PREVIEW</span><button data-horizon-action="restart">Restart intro</button></div>
 </section><section id="movies-page" class="content-page hidden"><p class="eyebrow">WATCH SOMETHING</p><h1>Movies & TV.</h1><div class="quick-grid"><button data-target="https://pluto.tv">Pluto TV</button><button data-target="https://www.netflix.com">Netflix</button></div></section><section id="apps-page" class="content-page hidden"><p class="eyebrow">YOUR WORKSPACE</p><h1>Apps.</h1><div class="quick-grid"><button data-target="https://discord.com">Discord</button><button data-target="https://www.youtube.com">YouTube</button></div></section><section id="settings-page" class="content-page hidden"><p class="eyebrow">BROWSER PREFERENCES</p><h1>Settings.</h1><div class="setting-row">Browsing mode <strong>Scramjet Proxy · Always on</strong></div></section><p id="status" class="status" aria-live="polite">Starting browser…</p>
         <div id="frame-host"></div>
         <footer class="browser-footer"><span>UNBLOCKED BROWSER</span><span>Tabs stay here · Settings save locally</span><span>1 tab</span></footer>
