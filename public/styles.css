@@ -217,3 +217,12 @@ body.embed-mode #proxy-frame{width:100%;height:100vh;min-height:100vh;border:0;b
 .beta-notice{padding:14px;border-left:3px solid #d7a64b;background:#252219;color:#e7d7b4;font-size:12px;line-height:1.5}
 .beta-official-link{display:inline-block;margin-top:14px}
 @media(max-width:600px){.minecraft-beta-page{margin:14px auto;padding:18px}.beta-platform-grid{grid-template-columns:1fr}}
+
+
+/* Blocklands playable voxel sandbox page */
+.blocklands-page{width:calc(100% - 28px);max-width:none;margin:14px auto;padding:clamp(12px,2vw,22px)}
+.blocklands-head{display:flex;justify-content:space-between;align-items:center;gap:14px;margin-bottom:12px}
+.blocklands-head h1{margin:3px 0 5px}.blocklands-head p{margin:4px 0}
+.blocklands-tag{padding:8px 11px;border:1px solid #6b557f;border-radius:999px;color:#d7c0ff;font-size:9px;font-weight:900;letter-spacing:.1em;white-space:nowrap}
+.blocklands-frame{display:block;width:100%;height:calc(100vh - 245px);min-height:480px;border:1px solid #59466c;border-radius:13px;background:#86bde8}
+@media(max-width:760px){.blocklands-page{width:calc(100% - 12px);margin:6px auto;padding:10px}.blocklands-frame{height:calc(100vh - 200px);min-height:430px}.blocklands-head{align-items:flex-start}.blocklands-tag{font-size:8px}}
