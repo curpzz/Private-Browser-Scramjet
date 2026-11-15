@@ -270,41 +270,10 @@ browseForm.addEventListener("submit", async (event) => {
  // If an intro overlay exists, dismiss it automatically during startup.
  dismiss();
  document.getElementById("intro-continue")?.addEventListener("click",dismiss);
- const pages=["home","history","games","minecraft","horizon","minecraft-beta","blocklands","movies","apps","settings"];
+ const pages=["home","history","games","minecraft-beta","blocklands","movies","apps","settings"];
  const show=name=>{pages.forEach(p=>document.getElementById(p==="home"?"start-page":p+"-page")?.classList.toggle("hidden",p!==name));document.querySelectorAll(".side-link").forEach(b=>b.classList.toggle("active",b.dataset.page===name))};
  document.querySelectorAll(".side-link[data-page]").forEach(b=>b.addEventListener("click",()=>show(b.dataset.page)));
  document.querySelectorAll("[data-target]").forEach(b=>b.addEventListener("click",()=>{addressInput.value=b.dataset.target;show("home");browseForm.requestSubmit()}));
- // Horizon menu-only interface preview: loading -> splash -> main menu -> create-world screen.
- const horizonPage=document.getElementById("horizon-page");
- const horizonScreens=[...document.querySelectorAll("[data-horizon-screen]")];
- let horizonTimer=null;
- const showHorizonScreen=name=>horizonScreens.forEach(screen=>screen.classList.toggle("hidden",screen.dataset.horizonScreen!==name));
- const startHorizon=()=>{
-  if(horizonTimer) clearTimeout(horizonTimer);
-  showHorizonScreen("mojang");
-  horizonTimer=setTimeout(()=>showHorizonScreen("splash"),1800);
- };
- document.querySelector('[data-page="horizon"]')?.addEventListener("click",startHorizon);
- horizonPage?.addEventListener("click",event=>{
-  const action=event.target.closest("[data-horizon-action]")?.dataset.horizonAction;
-  if(!action)return;
-  if(action==="continue")showHorizonScreen("menu");
-  else if(action==="create")showHorizonScreen("create");
-  else if(action==="menu")showHorizonScreen("menu");
-  else if(action==="restart")startHorizon();
-  else if(action==="worlds"||action==="options"||action==="not-ready")showHorizonScreen("info");
- });
- document.getElementById("minecraft-proxy-launch")?.addEventListener("click",()=>{
-  // Mantle provides the srcdoc/isolation environment expected by Mineral.
-  // Loading the raw GitHub files directly from ZUX would not provide it.
-  const popup=window.open("https://mantle-menu.pages.dev/","zux-mineral","popup=yes,width=1280,height=820,resizable=yes,scrollbars=yes");
-  if(!popup){
-    status.textContent="Popup blocked. Allow popups for this ZUX OS site, then click Open Mineral again.";
-    return;
-  }
-  popup.focus();
-  status.textContent="Mantle opened in a separate window. Choose Mineral from its menu.";
- });
  const key="zux-history",read=()=>{try{return JSON.parse(localStorage.getItem(key)||"[]")}catch{return[]}};
  const render=()=>{const el=document.getElementById("history-list");if(!el)return;el.replaceChildren();const a=read();if(!a.length){el.textContent="Your history is empty";return}a.forEach(url=>{const b=document.createElement("button");b.className="history-entry";b.textContent=url;b.onclick=()=>{addressInput.value=url;show("home");browseForm.requestSubmit()};el.appendChild(b)})};
  document.querySelector('[data-page="history"]')?.addEventListener("click",render);
