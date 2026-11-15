@@ -282,12 +282,12 @@ browseForm.addEventListener("submit", async (event) => {
  };
  document.querySelectorAll(".side-link[data-page]").forEach(b=>b.addEventListener("click",()=>{
   const page=b.dataset.page;
-  if(page==="blocklands"){show(page);launchMineral();return;}
+  if(page==="blocklands"){show(page);return;}
   show(page);
  }));
  document.getElementById("open-mineral")?.addEventListener("click",launchMineral);
  document.querySelectorAll("[data-target]").forEach(b=>b.addEventListener("click",()=>{addressInput.value=b.dataset.target;show("home");browseForm.requestSubmit()}));
- document.addEventListener("zux-home",()=>{frameHost.replaceChildren();document.getElementById("start-page")?.classList.remove("hidden");pages.filter(p=>p!=="home").forEach(p=>document.getElementById(p+"-page")?.classList.add("hidden"));addressInput.value="";status.textContent="Home";setTabTitle("New");});
+ document.addEventListener("zux-home",()=>{frameHost.replaceChildren();document.getElementById("start-page")?.classList.remove("hidden");pages.filter(p=>p!=="home").forEach(p=>document.getElementById(p+"-page")?.classList.add("hidden"));document.querySelectorAll(".side-link").forEach(b=>b.classList.toggle("active",b.dataset.page==="home"));addressInput.value="";status.textContent="Home";setTabTitle("New");window.scrollTo({top:0,left:0,behavior:"instant"});document.querySelector(".browser-area")?.scrollTo({top:0,left:0,behavior:"instant"});});
  // A compact multi-tab strip: each tab keeps its own loaded page while switching.
  const tabHost=document.getElementById("tabs");let tabCounter=1,activeTab=1;const tabData=new Map([[1,{title:"New",node:null}]]);
  const renderTabs=()=>{tabHost.replaceChildren();for(const [id,data] of tabData){const b=document.createElement("button");b.className="tab"+(id===activeTab?" active":"");b.dataset.tabId=id;b.innerHTML='<span class="tab-favicon">◎</span><span class="tab-title"></span><span class="tab-close">×</span>';b.querySelector(".tab-title").textContent=data.title;b.addEventListener("click",e=>{if(e.target.closest(".tab-close")){closeTab(id);return;}switchTab(id)});tabHost.appendChild(b)}};
