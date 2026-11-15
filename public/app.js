@@ -170,6 +170,8 @@ async function openTarget(raw) {
   frame.frame.title = "Scramjet website view";
   frameHost.appendChild(frame.frame);
   frame.go(target);
+  window.saveTabFrame?.(frame.frame);
+  window.setTabTitle?.(new URL(target).hostname.replace(/^www\\./,""));
   status.textContent = "Opening " + new URL(target).hostname + " through Scramjet…";
   return target;
 }
@@ -270,7 +272,7 @@ browseForm.addEventListener("submit", async (event) => {
  // If an intro overlay exists, dismiss it automatically during startup.
  dismiss();
  document.getElementById("intro-continue")?.addEventListener("click",dismiss);
- const pages=["home","history","games","minecraft-beta","blocklands","movies","apps","settings"];
+ const pages=["home","history","games","minecraft-beta","blocklands","movies","calculator","settings"];
  const show=name=>{pages.forEach(p=>document.getElementById(p==="home"?"start-page":p+"-page")?.classList.toggle("hidden",p!==name));document.querySelectorAll(".side-link").forEach(b=>b.classList.toggle("active",b.dataset.page===name))};
  const launchMineral=()=>{
   const popup=window.open("https://mineral.surge.sh/","zux-mineral","popup=yes,width=1280,height=820,resizable=yes,scrollbars=yes");
@@ -285,6 +287,18 @@ browseForm.addEventListener("submit", async (event) => {
  }));
  document.getElementById("open-mineral")?.addEventListener("click",launchMineral);
  document.querySelectorAll("[data-target]").forEach(b=>b.addEventListener("click",()=>{addressInput.value=b.dataset.target;show("home");browseForm.requestSubmit()}));
+ document.addEventListener("zux-home",()=>{frameHost.replaceChildren();document.getElementById("start-page")?.classList.remove("hidden");pages.filter(p=>p!=="home").forEach(p=>document.getElementById(p+"-page")?.classList.add("hidden"));addressInput.value="";status.textContent="Home";setTabTitle("New");});
+ // A compact multi-tab strip: each tab keeps its own loaded page while switching.
+ const tabHost=document.getElementById("tabs");let tabCounter=1,activeTab=1;const tabData=new Map([[1,{title:"New",node:null}]]);
+ const renderTabs=()=>{tabHost.replaceChildren();for(const [id,data] of tabData){const b=document.createElement("button");b.className="tab"+(id===activeTab?" active":"");b.dataset.tabId=id;b.innerHTML='<span class="tab-favicon">◎</span><span class="tab-title"></span><span class="tab-close">×</span>';b.querySelector(".tab-title").textContent=data.title;b.addEventListener("click",e=>{if(e.target.closest(".tab-close")){closeTab(id);return;}switchTab(id)});tabHost.appendChild(b)}};
+ const setTabTitle=title=>{const t=tabData.get(activeTab);if(t){t.title=title||"New";renderTabs()}};
+ const switchTab=id=>{const t=tabData.get(id);if(!t)return;activeTab=id;frameHost.replaceChildren();if(t.node){frameHost.appendChild(t.node);document.getElementById("start-page")?.classList.add("hidden")}else{document.getElementById("start-page")?.classList.remove("hidden")}renderTabs()};
+ const closeTab=id=>{tabData.delete(id);if(!tabData.size){tabCounter++;tabData.set(tabCounter,{title:"New",node:null})}if(activeTab===id)activeTab=[...tabData.keys()].at(-1);switchTab(activeTab);};
+ document.querySelector(".new-tab")?.addEventListener("click",()=>{tabCounter++;tabData.set(tabCounter,{title:"New",node:null});switchTab(tabCounter);show("home");addressInput.value="";});
+ window.setTabTitle=setTabTitle;window.saveTabFrame=node=>{const t=tabData.get(activeTab);if(t)t.node=node};renderTabs();
+ document.addEventListener("zux-home",()=>{const t=tabData.get(activeTab);if(t){t.node=null;t.title="New";renderTabs()}});
+ document.querySelectorAll("[data-calc]").forEach(()=>{});
+ const display=document.getElementById("calc-display");let calcExpr="";document.querySelectorAll(".calculator-keys button").forEach(btn=>btn.addEventListener("click",()=>{const v=btn.textContent.trim(),action=btn.dataset.calc;if(!display)return;if(action==="clear")calcExpr="";else if(action==="back")calcExpr=calcExpr.slice(0,-1);else if(action==="equals"){try{const safe=calcExpr.replace(/×/g,"*").replace(/÷/g,"/").replace(/−/g,"-");if(!/^[0-9+*/(). -]+$/.test(safe))throw Error();const result=Function("return ("+safe+")")();calcExpr=Number.isFinite(result)?String(result):""}catch{calcExpr=""}}else calcExpr+=v;display.value=calcExpr||"0"}));
  const key="zux-history",read=()=>{try{return JSON.parse(localStorage.getItem(key)||"[]")}catch{return[]}};
  const render=()=>{const el=document.getElementById("history-list");if(!el)return;el.replaceChildren();const a=read();if(!a.length){el.textContent="Your history is empty";return}a.forEach(url=>{const b=document.createElement("button");b.className="history-entry";b.textContent=url;b.onclick=()=>{addressInput.value=url;show("home");browseForm.requestSubmit()};el.appendChild(b)})};
  document.querySelector('[data-page="history"]')?.addEventListener("click",render);
