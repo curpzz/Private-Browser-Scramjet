@@ -6,6 +6,18 @@
   <meta name="theme-color" content="#101827">
   <meta name="description" content="Unblocked Browser">
   <title>Unblocked Browser</title>
+  <script>
+    // Remove tracking parameters from the visible address without reloading the app.
+    (() => {
+      const cleanUrl = new URL(window.location.href);
+      for (const key of [...cleanUrl.searchParams.keys()]) {
+        if (key.toLowerCase().startsWith("utm_")) cleanUrl.searchParams.delete(key);
+      }
+      if (cleanUrl.href !== window.location.href) {
+        history.replaceState(history.state, "", cleanUrl.pathname + cleanUrl.search + cleanUrl.hash);
+      }
+    })();
+  </script>
   <link rel="stylesheet" href="/styles.css?v=masked-launch-1">
   <script src="/scram/scramjet.all.js"></script>
   <script src="/register-sw.js?v=ub-12-baremux" defer></script>
