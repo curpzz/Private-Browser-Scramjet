@@ -274,18 +274,20 @@ browseForm.addEventListener("submit", async (event) => {
  document.getElementById("intro-continue")?.addEventListener("click",dismiss);
  const pages=["home","history","games","blocklands","movies","calculator","settings"];
  const show=name=>{pages.forEach(p=>document.getElementById(p==="home"?"start-page":p+"-page")?.classList.toggle("hidden",p!==name));document.querySelectorAll(".side-link").forEach(b=>b.classList.toggle("active",b.dataset.page===name))};
- const launchMineral=()=>{
-  const popup=window.open("https://mineral.surge.sh/","zux-mineral","popup=yes,width=1280,height=820,resizable=yes,scrollbars=yes");
-  if(!popup){status.textContent="Pop-up blocked. Allow pop-ups for this ZUX OS site, then tap Minecraft again.";return;}
+ const launchGame=(url,name)=>{
+  const popup=window.open(url,"_blank","popup=yes,width=1280,height=820,resizable=yes,scrollbars=yes");
+  if(!popup){status.textContent="Pop-up blocked. Allow pop-ups for this ZUX OS site, then try again.";return;}
   popup.focus();
-  status.textContent="Mineral Minecraft opened in its own window.";
+  status.textContent=name+" opened in its own window.";
  };
+ const launchMineral=()=>launchGame("https://mineral.surge.sh/","Minecraft");
+ const launchMin=()=>launchGame("https://dobberr.github.io/min/","Minecraft 2");
  document.querySelectorAll(".side-link[data-page]").forEach(b=>b.addEventListener("click",()=>{
   const page=b.dataset.page;
   if(page==="blocklands"){show(page);return;}
   show(page);
  }));
- document.getElementById("open-mineral")?.addEventListener("click",launchMineral);
+ document.getElementById("open-mineral")?.addEventListener("click",launchMineral);\n document.getElementById("open-min")?.addEventListener("click",launchMin);
  document.querySelectorAll("[data-target]").forEach(b=>b.addEventListener("click",()=>{addressInput.value=b.dataset.target;show("home");browseForm.requestSubmit()}));
  document.addEventListener("zux-home",()=>{frameHost.replaceChildren();document.getElementById("start-page")?.classList.remove("hidden");pages.filter(p=>p!=="home").forEach(p=>document.getElementById(p+"-page")?.classList.add("hidden"));document.querySelectorAll(".side-link").forEach(b=>b.classList.toggle("active",b.dataset.page==="home"));addressInput.value="";status.textContent="Home";setTabTitle("New");window.scrollTo({top:0,left:0,behavior:"instant"});document.querySelector(".browser-area")?.scrollTo({top:0,left:0,behavior:"instant"});});
  // A compact multi-tab strip: each tab keeps its own loaded page while switching.
