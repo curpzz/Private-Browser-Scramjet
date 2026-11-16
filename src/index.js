@@ -122,14 +122,26 @@ fastify.post("/api/session", async (request, reply) => {
   return reply.header("Set-Cookie", cookie).send({ token, expiresIn: 4 * 60 * 60 });
 });
 
-// Serve the complete BareMux browser bundle through Fastify's static
-// handler. This also handles query strings and the worker's related assets.
-await fastify.register(fastifyStatic, {
-  root: baremuxPath,
-  prefix: "/baremux/",
-  decorateReply: false,
-  cacheControl: false
-});
+// Verify and serve BareMux's two browser runtime files explicitly.
+// This avoids ambiguity between Fastify's root static mount and package assets.
+for (const asset of ["index.js", "worker.js"]) {
+  const assetPath = resolve(baremuxPath, asset);
+  const info = await stat(assetPath);
+  if (!info.isFile()) throw new Error(`BareMux asset is not a file: ${assetPath}`);
+  fastify.log.info({ asset, bytes: info.size }, "Verified BareMux browser asset");
+  fastify.get(`/baremux/${asset}`, async (_request, reply) => {
+    try {
+      const body = await readFile(assetPath);
+      return reply
+        .header("Cache-Control", "no-store")
+        .type("application/javascript; charset=utf-8")
+        .send(body);
+    } catch (error) {
+      fastify.log.error({ err: error, asset }, "Could not read BareMux browser asset");
+      return reply.code(500).type("text/plain").send("BareMux asset unavailable");
+    }
+  });
+}
 await fastify.register(fastifyStatic, { root: publicPath, decorateReply: true, index: ["index.html"] });
 await fastify.register(fastifyStatic, { root: scramjetPath, prefix: "/scram/", decorateReply: false });
 await fastify.register(fastifyStatic, { root: libcurlPath, prefix: "/libcurl/", decorateReply: false });
