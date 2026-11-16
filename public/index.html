@@ -6,13 +6,14 @@
   <meta name="theme-color" content="#101827">
   <meta name="description" content="Unblocked Browser">
   <title>Unblocked Browser</title>
-  <link rel="stylesheet" href="/styles.css?v=ui-cleanup-2">
+  <link rel="stylesheet" href="/styles.css?v=masked-launch-1">
   <script src="/scram/scramjet.all.js"></script>
   <script src="/register-sw.js?v=ub-12-baremux" defer></script>
   <script src="/baremux/index.js?v=ub-12-baremux" defer></script>
   <script src="/app.js?v=ui-cleanup-2" defer></script>
 </head>
-<body>
+<body class="launch-gate">
+  <main id="launch-screen"><button id="launch-zux" type="button">unblock</button></main>
   <div class="app-shell">
     <aside class="workspace">
       <div class="brand"><div class="brand-mark">UB</div><div><strong>UNBLOCKED</strong><span>BROWSER</span></div></div>
@@ -73,6 +74,27 @@
     </main>
   </div>
   <script>
+    (() => {
+      const inside = new URLSearchParams(location.search).has("inside");
+      if (inside) {
+        document.body.classList.remove("launch-gate");
+        document.getElementById("launch-screen")?.remove();
+      } else {
+        document.addEventListener("DOMContentLoaded", () => {
+          document.getElementById("launch-zux")?.addEventListener("click", () => {
+            const popup = window.open("about:blank", "_blank");
+            if (!popup) {
+              location.search = "?inside=1";
+              return;
+            }
+            const appUrl = location.origin + location.pathname + "?inside=1";
+            popup.document.open();
+            popup.document.write('<!doctype html><html><head><meta name="viewport" content="width=device-width,initial-scale=1"><title></title><style>html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#090910}iframe{display:block;width:100%;height:100%;border:0}</style></head><body><iframe allow="fullscreen; autoplay; clipboard-read; clipboard-write" src="' + appUrl + '"></iframe></body></html>');
+            popup.document.close();
+          });
+        });
+      }
+    })();
     document.addEventListener("DOMContentLoaded", () => {
       const startForm = document.getElementById("start-search");
       const address = document.getElementById("address");
