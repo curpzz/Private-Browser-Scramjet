@@ -80,18 +80,21 @@
         document.body.classList.remove("launch-gate");
         document.getElementById("launch-screen")?.remove();
       } else {
-        document.addEventListener("DOMContentLoaded", () => {
-          document.getElementById("launch-zux")?.addEventListener("click", () => {
-            const popup = window.open("about:blank", "_blank");
-            if (!popup) {
-              location.search = "?inside=1";
-              return;
-            }
-            const appUrl = location.origin + location.pathname + "?inside=1";
-            popup.document.open();
-            popup.document.write('<!doctype html><html><head><meta name="viewport" content="width=device-width,initial-scale=1"><title></title><style>html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#090910}iframe{display:block;width:100%;height:100%;border:0}</style></head><body><iframe allow="fullscreen; autoplay; clipboard-read; clipboard-write" src="' + appUrl + '"></iframe></body></html>');
-            popup.document.close();
-          });
+        let typed = "";
+        document.addEventListener("keydown", event => {
+          if (event.ctrlKey || event.altKey || event.metaKey || event.key.length !== 1) return;
+          typed = (typed + event.key.toLowerCase()).slice(-7);
+          if (typed !== "blocksi") return;
+          typed = "";
+          const popup = window.open("about:blank", "_blank");
+          if (!popup) {
+            location.search = "?inside=1";
+            return;
+          }
+          const appUrl = location.origin + location.pathname + "?inside=1";
+          popup.document.open();
+          popup.document.write('<!doctype html><html><head><meta name="viewport" content="width=device-width,initial-scale=1"><title></title><style>html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#090910}iframe{display:block;width:100%;height:100%;border:0}</style></head><body><iframe allow="fullscreen; autoplay; clipboard-read; clipboard-write" src="' + appUrl + '"></iframe></body></html>');
+          popup.document.close();
         });
       }
     })();
