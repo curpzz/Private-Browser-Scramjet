@@ -251,3 +251,11 @@ body.embed-mode #proxy-frame{width:100%;height:100vh;min-height:100vh;border:0;b
 .minecraft-launch-button:active{transform:scale(.985)}
 .minecraft-launch-caption{margin:0!important;color:#b7d7c3!important}
 @media(prefers-reduced-motion:reduce){.minecraft-launch-button{transition:none}}
+
+/* Single-word masked-tab launcher */
+body.launch-gate{margin:0;min-height:100vh;background:#090910;color:#f4efff}
+body.launch-gate .app-shell{display:none!important}
+#launch-screen{min-height:100vh;display:grid;place-items:center}
+#launch-zux{border:0;background:transparent;color:#f4efff;font:700 20px/1.2 system-ui,sans-serif;letter-spacing:.01em;padding:22px 30px;cursor:pointer}
+#launch-zux:hover{color:#cbb3ff}
+#launch-zux:focus-visible{outline:2px solid #cbb3ff;outline-offset:5px}
