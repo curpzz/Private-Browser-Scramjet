@@ -122,20 +122,14 @@ fastify.post("/api/session", async (request, reply) => {
   return reply.header("Set-Cookie", cookie).send({ token, expiresIn: 4 * 60 * 60 });
 });
 
-// Serve BareMux's two browser assets explicitly. This avoids relying on
-// wildcard static-file routing for the exact URLs used by the browser.
-const baremuxRoot = resolve(baremuxPath);
-for (const asset of ["index.js", "worker.js"]) {
-  const assetPath = resolve(baremuxRoot, asset);
-  await stat(assetPath);
-  fastify.get(`/baremux/${asset}`, async (_request, reply) => {
-    const body = await readFile(assetPath);
-    return reply
-      .type("application/javascript; charset=utf-8")
-      .header("Cache-Control", "no-cache")
-      .send(body);
-  });
-}
+// Serve the complete BareMux browser bundle through Fastify's static
+// handler. This also handles query strings and the worker's related assets.
+await fastify.register(fastifyStatic, {
+  root: baremuxPath,
+  prefix: "/baremux/",
+  decorateReply: false,
+  cacheControl: false
+});
 await fastify.register(fastifyStatic, { root: publicPath, decorateReply: true, index: ["index.html"] });
 await fastify.register(fastifyStatic, { root: scramjetPath, prefix: "/scram/", decorateReply: false });
 await fastify.register(fastifyStatic, { root: libcurlPath, prefix: "/libcurl/", decorateReply: false });
