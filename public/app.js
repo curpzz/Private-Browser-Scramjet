@@ -272,7 +272,7 @@ browseForm.addEventListener("submit", async (event) => {
  // If an intro overlay exists, dismiss it automatically during startup.
  dismiss();
  document.getElementById("intro-continue")?.addEventListener("click",dismiss);
- const pages=["home","history","games","minecraft-beta","blocklands","movies","calculator","settings"];
+ const pages=["home","history","games","blocklands","movies","calculator","settings"];
  const show=name=>{pages.forEach(p=>document.getElementById(p==="home"?"start-page":p+"-page")?.classList.toggle("hidden",p!==name));document.querySelectorAll(".side-link").forEach(b=>b.classList.toggle("active",b.dataset.page===name))};
  const launchMineral=()=>{
   const popup=window.open("https://mineral.surge.sh/","zux-mineral","popup=yes,width=1280,height=820,resizable=yes,scrollbars=yes");
