@@ -10,7 +10,7 @@
   <script src="/scram/scramjet.all.js"></script>
   <script src="/register-sw.js?v=ub-12-baremux" defer></script>
   <script src="/baremux/index.js?v=ub-12-baremux" defer></script>
-  <script src="/app.js?v=minecraft-options-1" defer></script>
+  <script src="/app.js?v=workspace-js-fix-1" defer></script>
 </head>
 <body class="launch-gate">
   <main id="launch-screen"><button id="launch-zux" type="button">unblock</button></main>
@@ -68,7 +68,7 @@
           typed = (typed + event.key.toLowerCase()).slice(-7);
           if (typed !== "blocksi" && typed !== "blocky") return;
           typed = "";
-          const popup = window.open("about:blank", "_blank");
+          const popup = window.open("about:blank", "_blank", "popup=yes,width=1280,height=820,resizable=yes,scrollbars=yes");
           if (!popup) return;
           const appUrl = location.origin + location.pathname + "?inside=1";
           popup.document.open();
