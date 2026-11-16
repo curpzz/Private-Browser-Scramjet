@@ -21,7 +21,8 @@
   <link rel="stylesheet" href="/styles.css?v=masked-launch-1">
   <script src="/scram/scramjet.all.js"></script>
   <script src="/register-sw.js?v=ub-12-baremux" defer></script>
-  <script src="/baremux/index.js?v=ub-12-baremux" defer></script>
+  <!-- Load BareMux synchronously before app.js so its global is guaranteed to exist. -->
+  <script src="/baremux/index.js?v=ub-13-baremux-sync"></script>
   <script src="/app.js?v=workspace-js-fix-1" defer></script>
 </head>
 <body class="launch-gate">
