@@ -287,7 +287,8 @@ browseForm.addEventListener("submit", async (event) => {
   if(page==="blocklands"){show(page);return;}
   show(page);
  }));
- document.getElementById("open-mineral")?.addEventListener("click",launchMineral);\n document.getElementById("open-min")?.addEventListener("click",launchMin);
+ document.getElementById("open-mineral")?.addEventListener("click",launchMineral);
+ document.getElementById("open-min")?.addEventListener("click",launchMin);
  document.querySelectorAll("[data-target]").forEach(b=>b.addEventListener("click",()=>{addressInput.value=b.dataset.target;show("home");browseForm.requestSubmit()}));
  document.addEventListener("zux-home",()=>{frameHost.replaceChildren();document.getElementById("start-page")?.classList.remove("hidden");pages.filter(p=>p!=="home").forEach(p=>document.getElementById(p+"-page")?.classList.add("hidden"));document.querySelectorAll(".side-link").forEach(b=>b.classList.toggle("active",b.dataset.page==="home"));addressInput.value="";status.textContent="Home";setTabTitle("New");window.scrollTo({top:0,left:0,behavior:"instant"});document.querySelector(".browser-area")?.scrollTo({top:0,left:0,behavior:"instant"});});
  // A compact multi-tab strip: each tab keeps its own loaded page while switching.
